@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Vamos a México! 🇲🇽 Family Spanish</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #dc2626; --green: #16a34a; --green-dark: #15803d;
+  --yellow: #fbbf24; --blue: #2563eb; --purple: #7c3aed;
+  --bg: #fef9f0; --card: #ffffff; --text: #1e293b;
+  --gray: #64748b; --border: #e2e8f0;
+  --radius: 16px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -1px rgba(0,0,0,.05);
+  --shadow-lg: 0 10px 25px -5px rgba(0,0,0,.12);
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+#app { max-width: 620px; margin: 0 auto; padding: 16px; min-height: 100vh; }
+
+/* ---- TYPOGRAPHY ---- */
+h1 { font-size: 2rem; font-weight: 900; }
+h2 { font-size: 1.3rem; font-weight: 800; }
+h3 { font-size: 1rem; font-weight: 700; }
+.text-sm { font-size: 0.85rem; }
+.text-xs { font-size: 0.75rem; }
+.text-gray { color: var(--gray); }
+.text-center { text-align: center; }
+.font-bold { font-weight: 700; }
+.font-black { font-weight: 900; }
+.uppercase { text-transform: uppercase; letter-spacing: 1px; }
+
+/* ---- LAYOUT ---- */
+.card { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 14px; }
+.card-inner { background: #f8fafc; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.mb-1 { margin-bottom: 4px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+
+/* ---- BUTTONS ---- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.15s; text-decoration: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+.btn:active { transform: scale(0.96); }
+.btn-full { width: 100%; }
+.btn-lg { padding: 16px 24px; font-size: 1.05rem; }
+.btn-sm { padding: 7px 14px; font-size: 0.85rem; }
+.btn-primary { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-primary:active { box-shadow: none; transform: translateY(4px) scale(1); }
+.btn-red { background: var(--red); color: white; box-shadow: 0 4px 0 #991b1b; }
+.btn-red:active { box-shadow: none; transform: translateY(4px) scale(1); }
+.btn-outline { background: transparent; color: var(--green); border: 2.5px solid var(--green); }
+.btn-outline:hover { background: #f0fdf4; }
+.btn-ghost { background: transparent; color: var(--gray); border: 2px solid var(--border); }
+.btn-ghost:hover { background: var(--border); }
+
+/* ---- INPUT ---- */
+.input-field { width: 100%; padding: 12px 16px; border: 2.5px solid var(--border); border-radius: 10px; font-size: 1rem; outline: none; transition: border-color 0.15s; background: white; color: var(--text); }
+.input-field:focus { border-color: var(--green); }
+.input-field.error { border-color: var(--red); }
+
+/* ---- HEADER ---- */
+.game-header { text-align: center; padding: 16px 0 8px; }
+.game-title { font-size: 2.2rem; font-weight: 900; color: var(--red); text-shadow: 3px 3px 0 #fbbf2488; }
+.flag-strip { display: flex; height: 6px; border-radius: 100px; overflow: hidden; margin: 8px 0; }
+.flag-strip > div { flex: 1; }
+
+/* ---- BACK BUTTON ---- */
+.back-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; padding: 8px 10px; border-radius: 10px; transition: background 0.15s; color: var(--text); }
+.back-btn:hover { background: var(--border); }
+
+/* ---- PLAYER SETUP ---- */
+.avatar-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
+.avatar-opt { aspect-ratio: 1; font-size: 2rem; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 3px solid transparent; cursor: pointer; transition: all 0.15s; background: #f1f5f9; }
+.avatar-opt:hover { transform: scale(1.1); background: #e2e8f0; }
+.avatar-opt.sel { border-color: var(--green); background: #dcfce7; transform: scale(1.05); }
+.color-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+.color-dot { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.15s; }
+.color-dot:hover { transform: scale(1.2); }
+.color-dot.sel { border-color: #1a1a2e; box-shadow: 0 0 0 2px white inset; }
+
+/* ---- PLAYER CHIPS ---- */
+.player-chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+.player-chip { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 100px; border: 3px solid transparent; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.15s; }
+.player-chip:hover { transform: scale(1.04); }
+.player-chip.sel { border-width: 3px; }
+
+/* ---- LEADERBOARD ---- */
+.lb-item { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; margin-bottom: 7px; }
+.lb-item.r1 { background: #fef9c3; }
+.lb-item.r2 { background: #f1f5f9; }
+.lb-item.r3 { background: #fff7ed; }
+.lb-item.r4 { background: #f8fafc; }
+.rank-badge { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; flex-shrink: 0; }
+
+/* ---- LEVEL MAP ---- */
+.level-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.level-card { background: white; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.18s; border: 3px solid transparent; position: relative; overflow: hidden; }
+.level-card:hover:not(.locked) { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.level-card.locked { opacity: 0.45; cursor: not-allowed; background: #f8fafc; }
+.level-card.done { border-color: var(--green); }
+.level-card.next { border-color: var(--yellow); background: #fffbeb; }
+.level-num { font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.level-emoji { font-size: 2rem; margin: 4px 0; }
+.level-title { font-size: 0.95rem; font-weight: 800; }
+.level-sub { font-size: 0.78rem; color: var(--gray); }
+.level-badge { position: absolute; top: 8px; right: 8px; font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 100px; }
+.badge-now { background: var(--yellow); color: #7c2d12; }
+.badge-done { background: #dcfce7; color: #15803d; }
+
+/* ---- VOCAB PREVIEW ---- */
+.vocab-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+.vocab-item { background: #f8fafc; border-radius: 8px; padding: 8px 11px; }
+.vocab-es { font-weight: 700; font-size: 0.9rem; }
+.vocab-en { font-size: 0.78rem; color: var(--gray); }
+
+/* ---- QUESTION SCREEN ---- */
+.progress-wrap { background: var(--border); border-radius: 100px; height: 12px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), #4ade80); border-radius: 100px; transition: width 0.4s ease; }
+.hearts { display: flex; gap: 3px; font-size: 1.2rem; }
+.q-card { background: white; border-radius: 20px; padding: 28px 22px; box-shadow: var(--shadow-lg); text-align: center; margin: 14px 0; }
+.q-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 10px; }
+.q-text { font-size: 2rem; font-weight: 900; color: var(--text); line-height: 1.2; }
+.q-sub { font-size: 0.85rem; color: #94a3b8; margin-top: 6px; }
+.ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ans-btn { background: #f8fafc; border: 3px solid var(--border); border-radius: 12px; padding: 14px 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: center; line-height: 1.3; color: var(--text); }
+.ans-btn:hover:not(:disabled) { background: #dbeafe; border-color: #93c5fd; transform: scale(1.02); }
+.ans-btn.correct { background: #dcfce7 !important; border-color: var(--green) !important; color: var(--green-dark) !important; }
+.ans-btn.wrong { background: #fee2e2 !important; border-color: var(--red) !important; color: #991b1b !important; }
+.feedback-box { text-align: center; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 1rem; animation: fadeUp 0.25s ease; }
+.feedback-box.ok { background: #dcfce7; color: #15803d; }
+.feedback-box.bad { background: #fee2e2; color: #dc2626; }
+
+/* ---- COMPLETION ---- */
+.big-stars { display: flex; justify-content: center; gap: 8px; font-size: 3.2rem; margin: 14px 0; }
+.star-slot { transition: all 0.4s; filter: grayscale(1) opacity(0.3); }
+.star-slot.lit { filter: none; animation: starPop 0.5s cubic-bezier(.36,.07,.19,.97) forwards; }
+
+/* ---- MISSION TIP ---- */
+.tip-card { background: linear-gradient(135deg, #16a34a, #0f766e); color: white; border-radius: var(--radius); padding: 20px; margin: 14px 0; text-align: center; }
+.tip-label { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+.tip-es { font-size: 1.45rem; font-weight: 900; margin: 7px 0 4px; }
+.tip-en { font-size: 0.88rem; opacity: 0.85; }
+
+/* ---- CONFETTI ---- */
+#confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+.cp { position: absolute; border-radius: 3px; animation: fall linear forwards; }
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bounceIn { 0% { transform: scale(0.85); opacity: 0; } 55% { transform: scale(1.04); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes starPop { 0% { transform: scale(0) rotate(-20deg); } 55% { transform: scale(1.35) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 60% { transform: translateX(9px); } }
+@keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+.bounce-in { animation: bounceIn 0.35s cubic-bezier(.36,.07,.19,.97); }
+.shake-it { animation: shake 0.4s ease; }
+
+/* ---- PASSAGE & FILL QUESTION TYPES ---- */
+.passage-block {
+  background: #f0fdf4;
+  border-left: 5px solid var(--green);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--text);
+  margin: 10px 0 4px;
+  text-align: left;
+}
+.passage-block .speaker { color: var(--green-dark); font-weight: 800; }
+.fill-sentence {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--text);
+  text-align: center;
+  padding: 10px 4px 4px;
+}
+.blank-slot {
+  display: inline-block;
+  background: #fef9c3;
+  border-bottom: 3px solid var(--yellow);
+  border-radius: 4px;
+  padding: 2px 12px;
+  color: #92400e;
+  font-style: italic;
+  min-width: 60px;
+  text-align: center;
+}
+.ans-btn.tall { padding: 12px 14px; font-size: 0.92rem; line-height: 1.35; text-align: left; }
+
+/* ---- EDIT PLAYER MODAL OVERLAY ---- */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 500; display: flex; align-items: flex-end; justify-content: center; }
+.modal-sheet { background: white; border-radius: 20px 20px 0 0; padding: 24px 20px 32px; width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; }
+
+/* ---- SAVE CODE ---- */
+.code-box { background: #f1f5f9; border-radius: 10px; padding: 12px; font-family: monospace; font-size: 0.78rem; word-break: break-all; color: #334155; border: 2px solid var(--border); max-height: 100px; overflow-y: auto; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 420px) {
+  .level-grid { grid-template-columns: 1fr; }
+  .ans-grid { grid-template-columns: 1fr; }
+  .q-text { font-size: 1.6rem; }
+  .game-title { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="confetti"></div>
+
+<script>
+'use strict';
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+
+const AVATARS = ['😊','🤠','👧','👦','👩','👨','🧒','🦁','🐯','🌟','🦅','🙏','⛪','🎸','🌮'];
+const COLORS  = ['#dc2626','#ea580c','#d97706','#16a34a','#0891b2','#2563eb','#7c3aed','#db2777'];
+
+const LEVELS = [
+  {
+    id: 1, emoji: '👋', title: 'Saludos', subtitle: 'Greetings',
+    desc: 'Say hello, goodbye, and be polite — the basics everyone needs!',
+    tip: { es: '¡Hola! ¿Cómo estás?', en: 'Hello! How are you?' },
+    vocab: [
+      { es: 'hola', en: 'hello' },
+      { es: 'adiós', en: 'goodbye' },
+      { es: 'por favor', en: 'please' },
+      { es: 'gracias', en: 'thank you' },
+      { es: 'de nada', en: "you're welcome" },
+      { es: 'sí', en: 'yes' },
+      { es: 'no', en: 'no' },
+      { es: 'perdón', en: 'excuse me' },
+      { es: 'buenos días', en: 'good morning' },
+      { es: 'buenas noches', en: 'good night' },
+    ]
+  },
+  {
+    id: 2, emoji: '🔢', title: 'Números', subtitle: 'Numbers 1–10',
+    desc: 'Count to ten in Spanish — useful at every station!',
+    tip: { es: 'Tengo diez dedos.', en: 'I have ten fingers.' },
+    vocab: [
+      { es: 'uno', en: 'one' },
+      { es: 'dos', en: 'two' },
+      { es: 'tres', en: 'three' },
+      { es: 'cuatro', en: 'four' },
+      { es: 'cinco', en: 'five' },
+      { es: 'seis', en: 'six' },
+      { es: 'siete', en: 'seven' },
+      { es: 'ocho', en: 'eight' },
+      { es: 'nueve', en: 'nine' },
+      { es: 'diez', en: 'ten' },
+    ]
+  },
+  {
+    id: 3, emoji: '👨‍👩‍👧‍👦', title: 'La Familia', subtitle: 'Family',
+    desc: "You'll meet lots of families and kids — learn these words!",
+    tip: { es: 'Dios te bendiga.', en: 'God bless you.' },
+    vocab: [
+      { es: 'mamá', en: 'mom' },
+      { es: 'papá', en: 'dad' },
+      { es: 'niño', en: 'boy / child' },
+      { es: 'niña', en: 'girl / child' },
+      { es: 'bebé', en: 'baby' },
+      { es: 'hermano', en: 'brother' },
+      { es: 'hermana', en: 'sister' },
+      { es: 'familia', en: 'family' },
+      { es: 'amigo', en: 'friend (boy)' },
+      { es: 'amiga', en: 'friend (girl)' },
+    ]
+  },
+  {
+    id: 4, emoji: '🎨', title: 'Colores', subtitle: 'Colors',
+    desc: 'Colors for the bounce houses, decorations, and fun!',
+    tip: { es: '¡Qué bonito color!', en: 'What a beautiful color!' },
+    vocab: [
+      { es: 'rojo', en: 'red' },
+      { es: 'azul', en: 'blue' },
+      { es: 'verde', en: 'green' },
+      { es: 'amarillo', en: 'yellow' },
+      { es: 'naranja', en: 'orange' },
+      { es: 'morado', en: 'purple' },
+      { es: 'blanco', en: 'white' },
+      { es: 'negro', en: 'black' },
+      { es: 'rosado', en: 'pink' },
+      { es: 'café', en: 'brown' },
+    ]
+  },
+  {
+    id: 5, emoji: '✂️', title: 'Corte de Pelo', subtitle: 'Haircut Station',
+    desc: "Vocabulary for the haircut station — you'll be a pro!",
+    tip: { es: '¿Te gustaría un corte de pelo?', en: 'Would you like a haircut?' },
+    vocab: [
+      { es: 'pelo', en: 'hair' },
+      { es: 'cabeza', en: 'head' },
+      { es: 'cara', en: 'face' },
+      { es: 'cortar', en: 'to cut' },
+      { es: 'largo', en: 'long' },
+      { es: 'corto', en: 'short' },
+      { es: 'listo', en: 'ready / done' },
+      { es: 'bonito', en: 'beautiful / nice' },
+      { es: 'espejo', en: 'mirror' },
+      { es: 'silla', en: 'chair' },
+    ]
+  },
+  {
+    id: 6, emoji: '🚲', title: 'Bicicletas', subtitle: 'Bike Repair Station',
+    desc: "Fix bikes and help the community — learn the words!",
+    tip: { es: '¿Necesitas ayuda con tu bicicleta?', en: 'Do you need help with your bike?' },
+    vocab: [
+      { es: 'bicicleta', en: 'bicycle' },
+      { es: 'rueda', en: 'wheel' },
+      { es: 'llave', en: 'wrench / key' },
+      { es: 'arreglar', en: 'to fix' },
+      { es: 'ayuda', en: 'help' },
+      { es: 'necesitar', en: 'to need' },
+      { es: 'roto', en: 'broken' },
+      { es: 'nuevo', en: 'new' },
+      { es: 'gracias a Dios', en: 'thank God' },
+      { es: 'muy bien', en: 'very good' },
+    ]
+  },
+  {
+    id: 7, emoji: '🍞', title: 'Comida y Agua', subtitle: 'Food & Water',
+    desc: 'Sharing food and water is love in action — learn to offer!',
+    tip: { es: '¿Tienes hambre? ¡Come!', en: 'Are you hungry? Eat!' },
+    vocab: [
+      { es: 'agua', en: 'water' },
+      { es: 'comida', en: 'food' },
+      { es: 'pan', en: 'bread' },
+      { es: 'leche', en: 'milk' },
+      { es: 'hambre', en: 'hunger' },
+      { es: 'sed', en: 'thirst' },
+      { es: 'comer', en: 'to eat' },
+      { es: 'beber', en: 'to drink' },
+      { es: 'delicioso', en: 'delicious' },
+      { es: 'más', en: 'more' },
+    ]
+  },
+  {
+    id: 8, emoji: '⛪', title: 'La Iglesia', subtitle: 'Worship Service',
+    desc: 'Worship, prayer, and the message — words that matter most.',
+    tip: { es: 'Dios te ama.', en: 'God loves you.' },
+    vocab: [
+      { es: 'Dios', en: 'God' },
+      { es: 'Jesús', en: 'Jesus' },
+      { es: 'amor', en: 'love' },
+      { es: 'orar', en: 'to pray' },
+      { es: 'Biblia', en: 'Bible' },
+      { es: 'cantar', en: 'to sing' },
+      { es: 'iglesia', en: 'church' },
+      { es: 'bendición', en: 'blessing' },
+      { es: 'fe', en: 'faith' },
+      { es: 'paz', en: 'peace' },
+    ]
+  },
+  {
+    id: 9, emoji: '🙋', title: 'Frases Útiles', subtitle: 'Helpful Phrases',
+    desc: 'Real conversation phrases you will actually use on the trip!',
+    tip: { es: 'Me llamo [nombre]. ¿Y tú?', en: 'My name is [name]. And you?' },
+    vocab: [
+      { es: '¿Cómo te llamas?', en: "What's your name?" },
+      { es: 'Me llamo...', en: 'My name is...' },
+      { es: '¿Cuántos años tienes?', en: 'How old are you?' },
+      { es: '¿De dónde eres?', en: 'Where are you from?' },
+      { es: '¿Cómo estás?', en: 'How are you?' },
+      { es: 'Estoy bien', en: 'I am well' },
+      { es: '¿Hablas inglés?', en: 'Do you speak English?' },
+      { es: 'No entiendo', en: "I don't understand" },
+      { es: 'Más despacio, por favor', en: 'Slower, please' },
+      { es: '¿Puedo ayudarte?', en: 'Can I help you?' },
+    ]
+  },
+  {
+    id: 10, emoji: '🇲🇽', title: '¡México!', subtitle: 'Mission Trip Ready!',
+    desc: "Final level! Full mission trip phrases — put it all together!",
+    tip: { es: '¡Dios les bendiga a todos!', en: 'God bless you all!' },
+    vocab: [
+      { es: 'Quiero ayudarte', en: 'I want to help you' },
+      { es: 'Jesús te ama', en: 'Jesus loves you' },
+      { es: '¿Necesitas algo?', en: 'Do you need anything?' },
+      { es: 'Estamos aquí para servir', en: 'We are here to serve' },
+      { es: '¿Quieres jugar?', en: 'Do you want to play?' },
+      { es: 'Ven conmigo', en: 'Come with me' },
+      { es: '¡Qué alegría!', en: 'What joy!' },
+      { es: 'Dios es bueno', en: 'God is good' },
+      { es: '¡Todo el tiempo!', en: 'All the time!' },
+      { es: 'Nos vemos mañana', en: 'See you tomorrow' },
+    ]
+  },
+  {
+    id: 11, emoji: '🔟', title: 'Más Números', subtitle: 'Numbers 11–30',
+    desc: 'Count higher — tell someone how many kids are in line!',
+    tip: { es: 'Hay veinte niños esperando.', en: 'There are twenty kids waiting.' },
+    vocab: [
+      { es: 'once', en: 'eleven' },
+      { es: 'doce', en: 'twelve' },
+      { es: 'trece', en: 'thirteen' },
+      { es: 'catorce', en: 'fourteen' },
+      { es: 'quince', en: 'fifteen' },
+      { es: 'veinte', en: 'twenty' },
+      { es: 'veinticinco', en: 'twenty-five' },
+      { es: 'treinta', en: 'thirty' },
+      { es: 'cien', en: 'one hundred' },
+      { es: 'muchos', en: 'many / a lot' },
+    ]
+  },
+  {
+    id: 12, emoji: '📅', title: 'Días y Tiempo', subtitle: 'Days & Time',
+    desc: 'Days of the week and basic time words for planning!',
+    tip: { es: '¿A qué hora empieza?', en: 'What time does it start?' },
+    vocab: [
+      { es: 'hoy', en: 'today' },
+      { es: 'mañana', en: 'tomorrow' },
+      { es: 'ayer', en: 'yesterday' },
+      { es: 'lunes', en: 'Monday' },
+      { es: 'viernes', en: 'Friday' },
+      { es: 'domingo', en: 'Sunday' },
+      { es: 'mañana (time)', en: 'morning' },
+      { es: 'tarde', en: 'afternoon / late' },
+      { es: 'noche', en: 'night' },
+      { es: 'ahora', en: 'now' },
+    ]
+  },
+  {
+    id: 13, emoji: '🧠', title: 'El Cuerpo', subtitle: 'Body Parts',
+    desc: 'Useful for the haircut station and looking out for each other!',
+    tip: { es: '¿Te duele algo?', en: 'Does something hurt?' },
+    vocab: [
+      { es: 'ojo', en: 'eye' },
+      { es: 'nariz', en: 'nose' },
+      { es: 'boca', en: 'mouth' },
+      { es: 'oreja', en: 'ear' },
+      { es: 'mano', en: 'hand' },
+      { es: 'pie', en: 'foot' },
+      { es: 'brazo', en: 'arm' },
+      { es: 'rodilla', en: 'knee' },
+      { es: 'espalda', en: 'back' },
+      { es: 'corazón', en: 'heart' },
+    ]
+  },
+  {
+    id: 14, emoji: '🐾', title: 'Animales', subtitle: 'Animals',
+    desc: "Kids love animals — a great way to connect and play!",
+    tip: { es: '¿Tienes una mascota?', en: 'Do you have a pet?' },
+    vocab: [
+      { es: 'perro', en: 'dog' },
+      { es: 'gato', en: 'cat' },
+      { es: 'pájaro', en: 'bird' },
+      { es: 'pez', en: 'fish' },
+      { es: 'caballo', en: 'horse' },
+      { es: 'vaca', en: 'cow' },
+      { es: 'pollo', en: 'chicken' },
+      { es: 'conejo', en: 'rabbit' },
+      { es: 'mariposa', en: 'butterfly' },
+      { es: 'burro', en: 'donkey' },
+    ]
+  },
+  {
+    id: 15, emoji: '☀️', title: 'El Clima', subtitle: 'Weather',
+    desc: "Mexico can be HOT — talk about the weather with locals!",
+    tip: { es: '¡Hace mucho calor hoy!', en: 'It\'s really hot today!' },
+    vocab: [
+      { es: 'calor', en: 'heat / hot' },
+      { es: 'frío', en: 'cold' },
+      { es: 'sol', en: 'sun' },
+      { es: 'lluvia', en: 'rain' },
+      { es: 'viento', en: 'wind' },
+      { es: 'nublado', en: 'cloudy' },
+      { es: 'húmedo', en: 'humid' },
+      { es: 'afuera', en: 'outside' },
+      { es: 'sombra', en: 'shade / shadow' },
+      { es: 'agua fría', en: 'cold water' },
+    ]
+  },
+  {
+    id: 16, emoji: '📍', title: 'Lugares', subtitle: 'Places',
+    desc: 'Find your way around town and point others in the right direction!',
+    tip: { es: '¿Dónde está el baño?', en: 'Where is the bathroom?' },
+    vocab: [
+      { es: 'baño', en: 'bathroom' },
+      { es: 'escuela', en: 'school' },
+      { es: 'parque', en: 'park' },
+      { es: 'mercado', en: 'market' },
+      { es: 'hospital', en: 'hospital' },
+      { es: 'calle', en: 'street' },
+      { es: 'casa', en: 'house / home' },
+      { es: 'aquí', en: 'here' },
+      { es: 'allá', en: 'over there' },
+      { es: 'cerca', en: 'nearby / close' },
+    ]
+  },
+  {
+    id: 17, emoji: '🏃', title: 'Acciones', subtitle: 'Action Verbs',
+    desc: 'Action words to communicate and play with everyone!',
+    tip: { es: '¡Vamos a jugar juntos!', en: "Let's play together!" },
+    vocab: [
+      { es: 'correr', en: 'to run' },
+      { es: 'saltar', en: 'to jump' },
+      { es: 'jugar', en: 'to play' },
+      { es: 'dar', en: 'to give' },
+      { es: 'recibir', en: 'to receive' },
+      { es: 'caminar', en: 'to walk' },
+      { es: 'hablar', en: 'to talk / speak' },
+      { es: 'escuchar', en: 'to listen' },
+      { es: 'compartir', en: 'to share' },
+      { es: 'abrazar', en: 'to hug' },
+    ]
+  },
+  {
+    id: 18, emoji: '😄', title: 'Emociones', subtitle: 'Feelings',
+    desc: 'Connect with kids and families by understanding how they feel!',
+    tip: { es: '¡Estoy muy feliz de estar aquí!', en: 'I am so happy to be here!' },
+    vocab: [
+      { es: 'feliz', en: 'happy' },
+      { es: 'triste', en: 'sad' },
+      { es: 'asustado', en: 'scared' },
+      { es: 'emocionado', en: 'excited' },
+      { es: 'cansado', en: 'tired' },
+      { es: 'enojado', en: 'angry' },
+      { es: 'bien', en: 'good / fine' },
+      { es: 'mal', en: 'bad / not well' },
+      { es: 'contento', en: 'content / glad' },
+      { es: 'nervioso', en: 'nervous' },
+    ]
+  },
+  {
+    id: 19, emoji: '👕', title: 'La Ropa', subtitle: 'Clothing',
+    desc: 'Talk about the clothes you brought to donate or give away!',
+    tip: { es: '¿Te gusta tu camisa nueva?', en: 'Do you like your new shirt?' },
+    vocab: [
+      { es: 'camisa', en: 'shirt' },
+      { es: 'pantalón', en: 'pants' },
+      { es: 'zapatos', en: 'shoes' },
+      { es: 'vestido', en: 'dress' },
+      { es: 'sombrero', en: 'hat' },
+      { es: 'calcetines', en: 'socks' },
+      { es: 'mochila', en: 'backpack' },
+      { es: 'ropa', en: 'clothes' },
+      { es: 'grande', en: 'big / large' },
+      { es: 'pequeño', en: 'small / little' },
+    ]
+  },
+  {
+    id: 20, emoji: '🌟', title: '¡Campeón!', subtitle: 'Champion Level',
+    desc: 'The ultimate challenge — advanced phrases to wrap up the trip!',
+    tip: { es: 'Llevaré este viaje en mi corazón para siempre.', en: 'I will carry this trip in my heart forever.' },
+    vocab: [
+      { es: 'Te voy a extrañar', en: 'I am going to miss you' },
+      { es: 'Fue un honor servirte', en: 'It was an honor to serve you' },
+      { es: '¿Puedo orar por ti?', en: 'Can I pray for you?' },
+      { es: 'Dios tiene un plan para ti', en: 'God has a plan for you' },
+      { es: 'Eres muy valiente', en: 'You are very brave' },
+      { es: 'Somos hermanos en Cristo', en: 'We are brothers and sisters in Christ' },
+      { es: '¡Nunca te olvides!', en: 'Never forget!' },
+      { es: 'Hasta luego, amigo', en: 'Until next time, friend' },
+      { es: 'Que Dios te guíe', en: 'May God guide you' },
+      { es: '¡Gracias por todo!', en: 'Thank you for everything!' },
+    ]
+  },
+
+  // ── LEVELS 21-30: SENTENCE & PASSAGE COMPREHENSION ──────────────────
+
+  {
+    id: 21, emoji: '🔤', title: 'Frases Simples', subtitle: 'Simple Sentences',
+    desc: 'Read short Spanish sentences and pick the right meaning!',
+    tip: { es: 'Poco a poco se llega lejos.', en: 'Step by step you go far.' },
+    questions: [
+      { type:'passage', label:'What does this sentence say?', prompt:'El niño tiene hambre.', correct:'The boy is hungry.', choices:['The boy is hungry.','The boy is thirsty.','The girl is hungry.','The boy wants to play.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'La familia está muy feliz hoy.', correct:'The family is very happy today.', choices:['The family is very happy today.','The family is eating today.','The family is very tired today.','The family is going home today.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'Necesito agua, por favor.', correct:'I need water, please.', choices:['I need water, please.','I want food, please.','I need help, please.','I have water, please.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'La bicicleta está rota.', correct:'The bicycle is broken.', choices:['The bicycle is broken.','The bicycle is new.','The bicycle is blue.','The wheel is broken.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'Los niños quieren jugar.', correct:'The children want to play.', choices:['The children want to play.','The children want to eat.','The children are playing.','The child wants to play.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'Dios te ama mucho.', correct:'God loves you very much.', choices:['God loves you very much.','God bless you very much.','Jesus loves you a lot.','God is with you always.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'El pelo está largo y bonito.', correct:'The hair is long and beautiful.', choices:['The hair is long and beautiful.','The hair is short and beautiful.','The face is long and pretty.','The hair is long and messy.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'Estoy muy feliz de estar aquí.', correct:'I am very happy to be here.', choices:['I am very happy to be here.','I am very tired today.','I am here and very sad.','I am happy to help here.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'Gracias por tu ayuda, amigo.', correct:'Thank you for your help, friend.', choices:['Thank you for your help, friend.','Thank you for the food, friend.','Thank you for coming, friend.','You are welcome, my friend.'] },
+      { type:'passage', label:'What does this sentence say?', prompt:'Hay cinco niños en la casa.', correct:'There are five children in the house.', choices:['There are five children in the house.','There are three boys in the park.','Five kids want to eat.','There are five houses on the street.'] },
+    ]
+  },
+  {
+    id: 22, emoji: '✏️', title: 'Rellena el Espacio I', subtitle: 'Fill in the Blank',
+    desc: 'Pick the Spanish word that best completes each sentence!',
+    tip: { es: 'La práctica hace al maestro.', en: 'Practice makes perfect.' },
+    questions: [
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Tengo mucha sed. Necesito ___.', correct:'agua', choices:['agua','comida','pan','leche'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'La bicicleta está ___. No funciona.', correct:'rota', choices:['rota','nueva','bonita','lista'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¡___, amigos! ¿Cómo están?', correct:'Hola', choices:['Hola','Adiós','Perdón','Gracias'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'El niño tiene ___ años.', correct:'cinco', choices:['cinco','rojo','largo','triste'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Dios te ___ mucho.', correct:'ama', choices:['ama','come','corre','canta'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'El pelo está muy largo. Necesita un ___ de pelo.', correct:'corte', choices:['corte','espejo','silla','llave'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¿Cómo te ___? Me llamo Pedro.', correct:'llamas', choices:['llamas','estás','comes','ayudas'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Quiero ___ por ti esta noche.', correct:'orar', choices:['orar','comer','correr','saltar'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Los niños están muy ___. ¡Quieren saltar!', correct:'emocionados', choices:['emocionados','tristes','cansados','enojados'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Buenos ___. ¿Cómo estás hoy?', correct:'días', choices:['días','noches','años','pelos'] },
+    ]
+  },
+  {
+    id: 23, emoji: '🏠', title: 'En el Orfanato', subtitle: 'Orphanage Sentences',
+    desc: "Read sentences about life at the orphanage and understand what's happening!",
+    tip: { es: '¿Puedo jugar contigo?', en: 'Can I play with you?' },
+    questions: [
+      { type:'passage', label:'What is happening?', prompt:'El bebé está llorando y necesita a su mamá.', correct:'A baby is crying and needs his mom.', choices:['A baby is crying and needs his mom.','A baby is hungry and wants to eat.','A little girl is crying and wants her sister.','A boy is crying and needs his dad.'] },
+      { type:'passage', label:'What is happening?', prompt:'Los niños quieren jugar con la pelota roja.', correct:'The kids want to play with the red ball.', choices:['The kids want to play with the red ball.','The kids want to eat the red food.','The children want a new red bicycle.','The kids are playing with a big ball.'] },
+      { type:'passage', label:'What is happening?', prompt:'¡Los niños están muy emocionados con las casas saltarinas!', correct:'The children are very excited about the bounce houses!', choices:['The children are very excited about the bounce houses!','The kids want to build new houses!','The children are excited to go home!','The kids are jumping on the trampoline!'] },
+      { type:'passage', label:'What is happening?', prompt:'La niña está triste, pero Dios la ama.', correct:'The girl is sad, but God loves her.', choices:['The girl is sad, but God loves her.','The girl is happy because God is good.','The girl is crying and God is with her.','The little girl is sad and hungry.'] },
+      { type:'passage', label:'What is happening?', prompt:'Hay veinte niños esperando el corte de pelo.', correct:'There are twenty children waiting for haircuts.', choices:['There are twenty children waiting for haircuts.','There are twelve boys waiting for food.','Twenty kids are playing outside.','There are twenty children in the church.'] },
+      { type:'passage', label:'What is happening?', prompt:'El papá dice gracias por la bicicleta nueva.', correct:'The dad says thank you for the new bicycle.', choices:['The dad says thank you for the new bicycle.','The dad wants to fix the broken bicycle.','The father says the bicycle is too small.','The dad is happy to see the children.'] },
+      { type:'passage', label:'What is happening?', prompt:'La hermana mayor cuida a los niños pequeños.', correct:'The older sister takes care of the younger children.', choices:['The older sister takes care of the younger children.','The older sister is playing with the babies.','The big sister wants to go to school.','The older sister is looking for her family.'] },
+      { type:'passage', label:'What is happening?', prompt:'Hoy hay comida y agua para todos.', correct:'Today there is food and water for everyone.', choices:['Today there is food and water for everyone.','Today they need food and water badly.','Today everyone is eating bread and milk.','Today water and food are running out.'] },
+      { type:'passage', label:'What is happening?', prompt:'El niño tiene cinco años y le gusta cantar.', correct:'The boy is five years old and likes to sing.', choices:['The boy is five years old and likes to sing.','The five-year-old boy wants to eat.','The boy is singing and he is happy.','The boy is five years old and likes to pray.'] },
+      { type:'passage', label:'What is happening?', prompt:'Hay una mamá con tres bebés en la casa.', correct:'There is a mom with three babies in the house.', choices:['There is a mom with three babies in the house.','There are three moms with one baby.','A mom and her babies need food.','There is a family of three in the church.'] },
+    ]
+  },
+  {
+    id: 24, emoji: '✏️', title: 'Rellena el Espacio II', subtitle: 'Fill in the Blank',
+    desc: 'Medium challenge — fill in Spanish words to complete each sentence!',
+    tip: { es: '¡Tú puedes hacerlo!', en: 'You can do it!' },
+    questions: [
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¿___ años tienes?', correct:'Cuántos', choices:['Cuántos','Dónde','Cómo','Qué'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Estoy muy ___ de estar en México.', correct:'feliz', choices:['feliz','triste','cansado','enojado'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'La rueda de la bicicleta está ___. Hay que arreglarla.', correct:'rota', choices:['rota','nueva','grande','bonita'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¿Puedo ___ por ti?', correct:'orar', choices:['orar','comer','hablar','cantar'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Nosotros estamos aquí para ___.', correct:'servir', choices:['servir','comer','dormir','correr'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Habla más ___, por favor. No entiendo.', correct:'despacio', choices:['despacio','rápido','largo','corto'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Jesús te ama. ¡Eso es la ___!', correct:'verdad', choices:['verdad','paz','fe','amor'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¿De ___ eres? Soy de los Estados Unidos.', correct:'dónde', choices:['dónde','quién','cuándo','cuántos'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¡Muchas ___ por todo lo que hiciste!', correct:'gracias', choices:['gracias','noches','cosas','veces'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¿___ hablas inglés?', correct:'Hablas', choices:['Hablas','Comes','Juegas','Cantas'] },
+    ]
+  },
+  {
+    id: 25, emoji: '🗣️', title: 'Diálogos I', subtitle: 'Short Conversations',
+    desc: "Read short two-line conversations and figure out what's going on!",
+    tip: { es: '— ¡Bienvenidos! — ¡Gracias, qué amables!', en: '"Welcome!" "Thank you, how kind!"' },
+    questions: [
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¡Hola! ¿Cómo te llamas?\n— Me llamo María. ¿Y tú?', correct:"Someone asks for a name and learns it's María.", choices:["Someone asks for a name and learns it's María.",'Two people greet each other and say goodbye.','Someone asks how María is feeling today.','María asks where the person is from.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¿Tienes hambre?\n— Sí, tengo mucha hambre. ¿Hay comida?', correct:'Someone asks if a person is hungry; they say yes and ask about food.', choices:['Someone asks if a person is hungry; they say yes and ask about food.','Two people agree they do not want to eat.','Someone offers food and the other person says no.','A child says they are not hungry but want water.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¿Cuántos años tienes?\n— Tengo ocho años.', correct:'Someone asks how old a person is and they say eight.', choices:['Someone asks how old a person is and they say eight.','Someone asks for a name and the answer is eight.','Two people are counting to eight together.','Someone asks if the child is eight and they say no.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— Perdón, ¿dónde está el baño?\n— Está allá, a la derecha.', correct:'Someone asks where the bathroom is and gets directions.', choices:['Someone asks where the bathroom is and gets directions.','Someone is sorry and looking for the school.','Two people are looking for the right street.','Someone asks about the park and gets directions.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¿Hablas inglés?\n— Un poco. Más despacio, por favor.', correct:'Someone asks if the other speaks English; they say a little and ask to slow down.', choices:['Someone asks if the other speaks English; they say a little and ask to slow down.','Two people are speaking English together quickly.','Someone says they speak Spanish, not English.','Someone asks for English lessons.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¡Buenos días! ¿Cómo estás?\n— ¡Muy bien, gracias a Dios! ¿Y tú?', correct:'A morning greeting where both people exchange how they are doing.', choices:['A morning greeting where both people exchange how they are doing.','Someone says good night and asks about dinner.','Two people say goodbye and thank God.','Someone says they are not well and need help.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¿Quieres un corte de pelo?\n— ¡Sí, por favor! Quiero el pelo corto.', correct:'Someone offers a haircut and the other wants it short, please.', choices:['Someone offers a haircut and the other wants it short, please.','Someone asks about hair color and wants it red.','The barber says the hair is too short already.','Someone wants long hair and asks for a haircut.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— La bicicleta está rota. ¿Puedes ayudarme?\n— ¡Claro que sí! Vamos a arreglarla.', correct:'Someone says their bike is broken; the other agrees to fix it.', choices:['Someone says their bike is broken; the other agrees to fix it.','Two people are looking for a new bicycle to buy.','Someone offers to give away a broken bicycle.','Two people agree the wheel is fine.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¿Puedo orar por ti?\n— Sí, por favor. Gracias, amigo.', correct:'Someone offers to pray for another person and they gratefully say yes.', choices:['Someone offers to pray for another person and they gratefully say yes.','Two friends are praying together in church.','Someone asks to read the Bible and the other agrees.','A person thanks their friend for praying yesterday.'] },
+      { type:'passage', label:'What is happening in this conversation?', prompt:'— ¿De dónde eres?\n— Soy de los Estados Unidos. Estamos aquí para servir.', correct:"Someone asks where the other is from; they say the USA and that they're here to serve.", choices:["Someone asks where the other is from; they say the USA and that they're here to serve.",'Someone from Mexico asks about the United States.','Two Americans are talking about where to serve next.','Someone says they are from Mexico and want to help.'] },
+    ]
+  },
+  {
+    id: 26, emoji: '📖', title: 'La Palabra', subtitle: 'Bible & Worship',
+    desc: 'Short scripture-inspired passages — the heart of the mission!',
+    tip: { es: 'Ama a tu prójimo como a ti mismo.', en: 'Love your neighbor as yourself.' },
+    questions: [
+      { type:'passage', label:'What does this verse mean?', prompt:'Dios es amor. El que no ama no conoce a Dios.', correct:'God is love. Anyone who does not love does not know God.', choices:['God is love. Anyone who does not love does not know God.','God is good. The one who knows God will be loved.','Love is from God. Everyone who loves knows the truth.','God loves us. The one who believes will be saved.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Jesús dijo: "Dejen que los niños vengan a mí."', correct:'Jesus said: "Let the children come to me."', choices:['Jesus said: "Let the children come to me."','Jesus said: "Love the children as I loved you."','Jesus told the children: "Follow me always."','Jesus said: "The children are my blessing."'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Con Dios, todas las cosas son posibles.', correct:'With God, all things are possible.', choices:['With God, all things are possible.','For God, nothing is too difficult.','God makes all things good and new.','Through God, we can do anything we want.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'La paz de Dios sobrepasa todo entendimiento.', correct:"The peace of God surpasses all understanding.", choices:["The peace of God surpasses all understanding.",'God\'s peace is the greatest gift of all.','The people of God live in peace forever.','God\'s peace is given to those who pray.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Ama a tu prójimo como a ti mismo.', correct:'Love your neighbor as yourself.', choices:['Love your neighbor as yourself.','Love God with all your heart and soul.','Love your family more than anything.','Your neighbor should love you as a friend.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'El Señor es mi pastor; nada me faltará.', correct:'The Lord is my shepherd; I shall not want.', choices:['The Lord is my shepherd; I shall not want.','The Lord is my strength; I will not be afraid.','The Lord watches over me every day.','The Lord is good; his love never ends.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Porque de tal manera amó Dios al mundo, que dio a su Hijo unigénito.', correct:'For God so loved the world that he gave his one and only Son.', choices:['For God so loved the world that he gave his one and only Son.','Because God loved his people, he sent them blessings.','God loved the world and created it with his own hands.','God gave the world to his children as a gift.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Cantad al Señor un cántico nuevo.', correct:'Sing to the Lord a new song.', choices:['Sing to the Lord a new song.','Pray to the Lord every morning and night.','Come to the Lord with singing and joy.','Worship the Lord with music and praise.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Todo lo puedo en Cristo que me fortalece.', correct:'I can do all things through Christ who strengthens me.', choices:['I can do all things through Christ who strengthens me.','All things are possible for those who believe in Christ.','Christ gives strength to those who pray every day.','Through faith in Christ, nothing can defeat me.'] },
+      { type:'passage', label:'What does this verse mean?', prompt:'Den gracias al Señor porque él es bueno; su amor dura para siempre.', correct:'Give thanks to the Lord, for he is good; his love endures forever.', choices:['Give thanks to the Lord, for he is good; his love endures forever.','Thank God for his blessings because he loves you.','Praise the Lord because his goodness never ends.','Be grateful to God because he is faithful always.'] },
+    ]
+  },
+  {
+    id: 27, emoji: '✏️', title: 'Rellena el Espacio III', subtitle: 'Fill in the Blank',
+    desc: "Harder sentences — use everything you've learned to fill the gaps!",
+    tip: { es: 'El amor es la respuesta.', en: 'Love is the answer.' },
+    questions: [
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Jesús te ___ y tiene un plan para tu vida.', correct:'ama', choices:['ama','llama','lleva','ayuda'] },
+      { type:'fill', label:'Which phrase completes the sentence?', prompt:'"___ que los niños vengan a mí." — Jesús', correct:'Dejen', choices:['Dejen','Digan','Hagan','Pongan'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Estamos aquí para ___. No para recibir.', correct:'servir', choices:['servir','comer','hablar','descansar'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Todo lo puedo en ___ que me fortalece.', correct:'Cristo', choices:['Cristo','Dios','amor','fe'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Ama a tu ___ como a ti mismo.', correct:'prójimo', choices:['prójimo','amigo','hermano','papá'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'___ de tal manera amó Dios al mundo...', correct:'Porque', choices:['Porque','Cuando','Aunque','Pero'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'La ___ de Dios sobrepasa todo entendimiento.', correct:'paz', choices:['paz','fe','amor','bendición'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'¡___ al Señor un cántico nuevo!', correct:'Cantad', choices:['Cantad','Orad','Amad','Dad'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Den ___ al Señor porque él es bueno.', correct:'gracias', choices:['gracias','amor','fe','paz'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Con Dios, todas las ___ son posibles.', correct:'cosas', choices:['cosas','personas','canciones','palabras'] },
+    ]
+  },
+  {
+    id: 28, emoji: '📝', title: 'Historias', subtitle: 'Story Paragraphs',
+    desc: 'Read longer stories in Spanish and understand what\'s happening!',
+    tip: { es: 'Una historia a la vez.', en: 'One story at a time.' },
+    questions: [
+      { type:'passage', label:'What is this story about?', prompt:'Hoy llegamos al orfanato. Hay muchos niños felices esperándonos. Los niños quieren jugar y los adultos quieren ayudar. ¡Es un día especial!', correct:'A group arrives at the orphanage where happy children are waiting to play and be helped.', choices:['A group arrives at the orphanage where happy children are waiting to play and be helped.','A family visits a school and the teachers are waiting for them.','Children at an orphanage are hungry and waiting for food to arrive.','A team arrives at a church ready to sing and worship together.'] },
+      { type:'passage', label:'What is this story about?', prompt:'María tiene ocho años. No tiene mamá ni papá. Pero hoy está muy feliz porque hay una casa saltarina y ella quiere saltar mucho.', correct:'An 8-year-old orphan girl is very happy today because there is a bounce house.', choices:['An 8-year-old orphan girl is very happy today because there is a bounce house.','A little girl named María wants to find her parents at the park.','María is eight and is happy because she got a new bicycle.','An eight-year-old is sad because she cannot find the bounce house.'] },
+      { type:'passage', label:'What is this story about?', prompt:'El señor Carlos tiene una bicicleta rota. No tiene dinero para comprar una nueva. Hoy, el equipo misionero la arregló. Carlos llora de alegría y dice: "¡Gracias a Dios!"', correct:"A man's broken bike was fixed by the mission team and he cries with joy and thanks God.", choices:["A man's broken bike was fixed by the mission team and he cries with joy and thanks God.",'Carlos buys a new bicycle and thanks the team for helping him.','A man loses his bicycle and the team helps him find it.','Carlos cries because his bicycle cannot be fixed and it is too expensive.'] },
+      { type:'passage', label:'What is this story about?', prompt:'En el servicio de adoración, todos cantamos juntos. Los niños no conocen las palabras, pero levantan sus manos. La presencia de Dios está aquí.', correct:'At the worship service, everyone sings together and children raise their hands even without knowing the words.', choices:['At the worship service, everyone sings together and children raise their hands even without knowing the words.','The children are learning Spanish worship songs in the church today.','A worship team teaches the children new Bible verses and they memorize them.','Everyone prays together and the children lead the worship service.'] },
+      { type:'passage', label:'What is this story about?', prompt:'Ana llegó al orfanato con miedo. No hablaba español. Pero los niños la abrazaron y ella aprendió una palabra: "amiga."', correct:'Ana was afraid but the children hugged her and she learned the word "amiga" (friend).', choices:['Ana was afraid but the children hugged her and she learned the word "amiga" (friend).','Ana spoke no Spanish but taught the children English words.','A girl named Ana cried at the orphanage because she missed her friends.','Ana was nervous but learned Spanish quickly by talking to the teachers.'] },
+      { type:'passage', label:'What is this story about?', prompt:'La mamá llegó con sus cuatro hijos. Todos tenían hambre. El equipo les dio pan, agua y leche. La mamá miró al cielo y dijo: "Dios es bueno."', correct:'A mother with four hungry children received bread, water and milk from the team, and praised God.', choices:['A mother with four hungry children received bread, water and milk from the team, and praised God.','A team of four gave food to a group of mothers and prayed together.','A mother brought food for the whole team and they thanked her.','Four children arrived hungry and the team helped them find their mother.'] },
+      { type:'passage', label:'What is this story about?', prompt:'El niño se llamaba Diego. Tenía el pelo muy largo. Después del corte de pelo, Diego se miró en el espejo y sonrió. "¡Estoy listo!" dijo.', correct:'A boy named Diego got a haircut, looked in the mirror, smiled and said he was ready.', choices:['A boy named Diego got a haircut, looked in the mirror, smiled and said he was ready.','Diego looked in the mirror and was upset about his new haircut.','A boy named Diego asked for a mirror to see his long hair.','Diego got new clothes and looked in the mirror feeling ready.'] },
+      { type:'passage', label:'What is this story about?', prompt:'Después del culto, un hombre se acercó a nosotros. Estaba llorando. Dijo: "Nadie me había dicho que Dios me amaba." Le oramos y el hombre sonrió.', correct:'After the service, a crying man said no one had told him God loved him; after prayer he smiled.', choices:['After the service, a crying man said no one had told him God loved him; after prayer he smiled.','A man came to the service and prayed for the mission team after the message.','After church, a man cried because he was going to miss everyone.','A man smiled after the service and told us he already knew God loved him.'] },
+      { type:'passage', label:'What is this story about?', prompt:'El último día fue muy difícil. Los niños lloraban. Nosotros también. Una niña me abrazó fuerte y dijo: "¿Vas a volver?"', correct:'On the last day, children and team cried together, and a girl asked if they would come back.', choices:['On the last day, children and team cried together, and a girl asked if they would come back.','The last day was hard because the team got lost and could not find the orphanage.','On the final day, the children performed a concert and everyone celebrated.','The last morning was emotional because food ran out and kids went hungry.'] },
+      { type:'passage', label:'What is this story about?', prompt:'Esta semana, arreglamos bicicletas, cortamos pelo y compartimos comida. Pero lo más importante fue compartir el amor de Dios.', correct:"The week included fixing bikes, cutting hair, and sharing food, but most importantly sharing God's love.", choices:["The week included fixing bikes, cutting hair, and sharing food, but most importantly sharing God's love.",'The team spent the week building bikes and cooking food for the orphanage.','The most important thing the team did was cut hair and share supplies.','The week was about repairs and food, and the children learned a lot.'] },
+    ]
+  },
+  {
+    id: 29, emoji: '🗣️', title: 'Diálogos II', subtitle: 'Real Conversations',
+    desc: 'Longer back-and-forth conversations — read carefully!',
+    tip: { es: 'Escucha más de lo que hablas.', en: 'Listen more than you speak.' },
+    questions: [
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Cómo te llamas?\n— Me llamo Carlos. ¿Y tú?\n— Me llamo Sarah. Soy de los Estados Unidos.\n— ¡Qué bien! Bienvenida a México.', correct:"Carlos and Sarah introduce themselves; she's from the USA and he welcomes her to Mexico.", choices:["Carlos and Sarah introduce themselves; she's from the USA and he welcomes her to Mexico.",'Two friends from Mexico meet and talk about the United States.','Sarah asks Carlos about Mexico and he tells her about his city.','Carlos and Sarah meet at church and share their favorite Bible verses.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Tienes hambre?\n— Sí, mucha. ¿Hay comida?\n— Sí, tenemos pan, agua y leche.\n— ¡Gracias! Dios los bendiga.', correct:'Someone is very hungry, gets offered bread, water and milk, and responds with a blessing.', choices:['Someone is very hungry, gets offered bread, water and milk, and responds with a blessing.','Two people order food at a restaurant and pray before eating.','A family asks for more food and offers to pay for it.','Someone offers food to a team and they say they already ate.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— Tu bicicleta está rota. ¿Puedo ayudarte?\n— Sí, por favor. No tengo dinero para una nueva.\n— No hay problema. La arreglamos gratis.\n— ¡Que Dios los bendiga!', correct:"A person's bike is broken; the team fixes it free of charge and the person blesses them.", choices:["A person's bike is broken; the team fixes it free of charge and the person blesses them.",'Someone buys a new bike and thanks the mission team for the money.','A broken bike is too expensive so the team gives the person a new one.','The team asks for money to fix a bicycle but the person cannot pay.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Cuántos años tienes?\n— Tengo diez años.\n— ¿Tienes hermanos?\n— Sí, tengo tres hermanas y un hermano.', correct:'An adult asks a child their age and about siblings; the child has four siblings total.', choices:['An adult asks a child their age and about siblings; the child has four siblings total.','A child asks an adult how old they are and about their family.','Two children ask each other their names and talk about their school.','A child says they are ten and that all their siblings are older.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Quieres un corte de pelo?\n— Sí, por favor. El pelo está muy largo.\n— ¿Lo quieres corto o un poco largo?\n— Corto, por favor. ¡Listo!', correct:"Someone asks about a haircut; the person wants it short and it's done.", choices:["Someone asks about a haircut; the person wants it short and it's done.",'A barber says the hair is fine and does not need a cut yet.','Two people are deciding on a hair color for a new style.','Someone wants long hair but the barber cuts it short by mistake.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— Hola. No hablo mucho español.\n— No hay problema. Hablo un poco de inglés.\n— ¡Perfecto! Podemos trabajar juntos.\n— ¡Sí! Somos amigos.', correct:'Two people with a language barrier realize they can work together and become friends.', choices:['Two people with a language barrier realize they can work together and become friends.','Two strangers argue about which language to use when working together.','An English speaker teaches a Spanish class to the community.','Two friends argue about whether to speak English or Spanish.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Puedo orar por ti?\n— Sí. Mi familia necesita ayuda.\n— Padre Dios, bendice a esta familia. Dales paz y provisión.\n— Amén. Gracias, amigo.', correct:"Someone offers to pray for a family in need, prays a blessing, and is thanked.", choices:["Someone offers to pray for a family in need, prays a blessing, and is thanked.",'A pastor leads a church service and prays for all families present.','Two people pray together every morning for their community.','Someone asks for prayer and the other person says they will pray at home.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— El niño no quiere comer.\n— ¿Tiene hambre?\n— Sí, pero está nervioso.\n— Voy a sentarme con él. Así no está solo.', correct:"A child won't eat because he's nervous; someone decides to sit with him so he's not alone.", choices:["A child won't eat because he's nervous; someone decides to sit with him so he's not alone.",'A boy is not hungry and wants to play instead of eating with the team.','A nervous child asks someone to sit with them and share food together.','A child refuses food and the team prays that he will feel better soon.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Vas a volver el año que viene?\n— Espero que sí. Este lugar está en mi corazón.\n— Los niños te van a extrañar.\n— Y yo a ellos.', correct:'Someone hopes to return next year; this place is in their heart and they will miss the children.', choices:['Someone hopes to return next year; this place is in their heart and they will miss the children.','A person says they will never return to Mexico because it was too difficult.','Two volunteers discuss which orphanage to visit next year.','Someone plans to stay permanently and will not go back home.'] },
+      { type:'passage', label:'What is this conversation about?', prompt:'— ¿Qué aprendiste este viaje?\n— Aprendí que el amor no necesita idioma.\n— ¿Qué quieres decir?\n— Que un abrazo dice más que mil palabras.', correct:'Someone reflects that love needs no language, and a hug says more than a thousand words.', choices:['Someone reflects that love needs no language, and a hug says more than a thousand words.','A person says they learned a lot of new Spanish words on the trip.','Two people talk about how important it is to speak the same language.','Someone says the trip was hard but they learned to work without speaking.'] },
+    ]
+  },
+  {
+    id: 30, emoji: '🏅', title: '¡El Gran Final!', subtitle: 'Ultimate Challenge',
+    desc: "The hardest level — mixed passages, stories, and fill-in-the-blank. You've got this!",
+    tip: { es: 'Bien hecho. Ahora ve y sirve.', en: 'Well done. Now go and serve.' },
+    questions: [
+      { type:'fill', label:'Which word completes the sentence?', prompt:'El amor ___ necesita idioma.', correct:'no', choices:['no','sí','más','poco'] },
+      { type:'passage', label:'What is the main message of this paragraph?', prompt:'Vinimos a México con herramientas, tijeras y comida. Pero lo que más dimos fue tiempo, amor y oración. Los niños no necesitaban cosas. Necesitaban saber que alguien los amaba.', correct:'The most important thing they gave was time, love, and prayer — not things.', choices:['The most important thing they gave was time, love, and prayer — not things.','The team brought the wrong supplies and had to improvise with prayer.','Children in Mexico mostly need food, tools, and haircuts.','Prayer was less important than the physical supplies the team brought.'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Un ___ dice más que mil palabras.', correct:'abrazo', choices:['abrazo','corte','arreglo','verso'] },
+      { type:'passage', label:'What is this person realizing?', prompt:'Fui a México para ayudar a otros. Pero al final, creo que ellos me ayudaron a mí. Me enseñaron a ser feliz con poco, a reír sin razón y a amar sin condiciones.', correct:'The person went to help others but realized the people there taught them joy, laughter, and unconditional love.', choices:['The person went to help others but realized the people there taught them joy, laughter, and unconditional love.','The person helped the community and received money and food in return.','Someone went to Mexico and learned that they needed to study more Spanish.','The person realized that Mexico needs more mission teams each year.'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Aprendí que el amor no ___ idioma.', correct:'necesita', choices:['necesita','habla','tiene','conoce'] },
+      { type:'passage', label:'What is happening in this story?', prompt:'Juan tenía miedo de hablar con los niños. No sabía español. Pero él empezó a reír con ellos, a jugar fútbol y a compartir su comida. Al final del día, era el favorito de todos.', correct:'Juan was afraid to speak but connected through laughter, soccer, and sharing — and became everyone\'s favorite.', choices:['Juan was afraid to speak but connected through laughter, soccer, and sharing — and became everyone\'s favorite.','Juan spoke Spanish well and taught the children English words all day.','Juan was shy but the pastor translated everything he said to the children.','A boy named Juan refused to play with the team and stayed by himself.'] },
+      { type:'fill', label:'Which word completes the sentence?', prompt:'Vine a ___, pero aprendí a recibir.', correct:'dar', choices:['dar','tomar','correr','volver'] },
+      { type:'passage', label:'What is the lesson of this reflection?', prompt:'Al final del viaje, no recordamos las bicicletas que arreglamos ni el pelo que cortamos. Recordamos los nombres de los niños, sus sonrisas y sus abrazos.', correct:"At the end of the trip, what you remember are the children's names, smiles, and hugs — not the tasks.", choices:["At the end of the trip, what you remember are the children's names, smiles, and hugs — not the tasks.",'The team was proud of how many bicycles they fixed and haircuts they gave.','The best memories from the trip were the worship services and Bible lessons.','People remember most the food they shared and the work they accomplished.'] },
+      { type:'fill', label:'Which phrase best completes this blessing?', prompt:'Que Dios les ___ en el camino de vuelta a casa.', correct:'guíe', choices:['guíe','llame','cante','arregle'] },
+      { type:'passage', label:'What is the final message?', prompt:'Dios es bueno. ¡Todo el tiempo! Y todo el tiempo... ¡Dios es bueno! Este es el mensaje que llevamos al mundo — en español, en inglés, con palabras o sin ellas.', correct:"God is good all the time — this is the message we carry to the world, in any language, with or without words.", choices:["God is good all the time — this is the message we carry to the world, in any language, with or without words.",'God is good and we must learn Spanish to share his message correctly.','The best way to share God\'s love is through music and Bible verses in Spanish.','God\'s message is only truly understood when spoken in the local language.'] },
+    ]
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+
+const G = {
+  players: [],
+  progress: {},
+  activePlayer: null,
+  // game session
+  level: null,
+  questions: [],
+  qIdx: 0,
+  score: 0,
+  hearts: 3,
+  answers: [],
+  answerLocked: false,
+};
+
+function load() {
+  try {
+    const p = localStorage.getItem('vm_players');
+    const r = localStorage.getItem('vm_progress');
+    if (p) G.players = JSON.parse(p);
+    if (r) G.progress = JSON.parse(r);
+    const ap = localStorage.getItem('vm_active');
+    if (ap) G.activePlayer = G.players.find(x => x.id === ap) || null;
+  } catch(e) {}
+}
+
+function save() {
+  try {
+    localStorage.setItem('vm_players', JSON.stringify(G.players));
+    localStorage.setItem('vm_progress', JSON.stringify(G.progress));
+    if (G.activePlayer) localStorage.setItem('vm_active', G.activePlayer.id);
+  } catch(e) {}
+}
+
+function prog(pid) {
+  if (!G.progress[pid]) G.progress[pid] = { scores: {}, points: 0 };
+  return G.progress[pid];
+}
+
+function maxUnlocked(pid) {
+  const p = prog(pid);
+  for (let i = LEVELS.length; i >= 1; i--) {
+    if (p.scores[i]) return Math.min(i + 1, LEVELS.length);
+  }
+  return 1;
+}
+
+function totalStars(pid) {
+  return Object.values(prog(pid).scores).reduce((s, x) => s + x.stars, 0);
+}
+
+// ============================================================
+// QUESTION GENERATION
+// ============================================================
+
+function makeQuestions(level) {
+  // Levels 21+ have pre-defined questions (passage/fill types)
+  if (level.questions) return shuffle([...level.questions]);
+  const vocab = level.vocab;
+  const shuffled = shuffle([...vocab]);
+  const qs = [];
+  for (let i = 0; i < Math.min(10, shuffled.length); i++) {
+    const item = shuffled[i];
+    const others = shuffle(vocab.filter(v => v !== item));
+    const isForward = Math.random() < 0.5;
+    if (isForward) {
+      const choices = shuffle([item.en, ...others.slice(0, 3).map(o => o.en)]);
+      qs.push({ prompt: item.es, label: 'What does this mean in English?', correct: item.en, choices });
+    } else {
+      const choices = shuffle([item.es, ...others.slice(0, 3).map(o => o.es)]);
+      qs.push({ prompt: item.en, label: 'How do you say this in Spanish?', correct: item.es, choices });
+    }
+  }
+  return shuffle(qs);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function enc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ============================================================
+// AUDIO
+// ============================================================
+
+function beep(type) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const g = ctx.createGain();
+    g.connect(ctx.destination);
+    const now = ctx.currentTime;
+    if (type === 'ok') {
+      [[523.25,0],[659.25,.1],[783.99,.2]].forEach(([f,t]) => {
+        const o = ctx.createOscillator(); o.connect(g);
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.22, now+t);
+        g.gain.exponentialRampToValueAtTime(0.001, now+t+0.28);
+        o.start(now+t); o.stop(now+t+0.28);
+      });
+    } else if (type === 'bad') {
+      const o = ctx.createOscillator(); o.connect(g);
+      o.frequency.setValueAtTime(200, now);
+      o.frequency.exponentialRampToValueAtTime(140, now+0.3);
+      g.gain.setValueAtTime(0.22, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now+0.35);
+      o.start(now); o.stop(now+0.35);
+    } else if (type === 'win') {
+      [523.25,659.25,783.99,1046.5].forEach((f,i) => {
+        const o = ctx.createOscillator(); const gg = ctx.createGain();
+        o.connect(gg); gg.connect(ctx.destination);
+        o.frequency.value = f;
+        gg.gain.setValueAtTime(0.25, now+i*0.13);
+        gg.gain.exponentialRampToValueAtTime(0.001, now+i*0.13+0.35);
+        o.start(now+i*0.13); o.stop(now+i*0.13+0.35);
+      });
+    }
+  } catch(e) {}
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+
+function confetti() {
+  const c = document.getElementById('confetti');
+  const cols = ['#dc2626','#16a34a','#fbbf24','#2563eb','#7c3aed','#f97316','#fff'];
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('div');
+    p.className = 'cp';
+    const size = 7 + Math.random() * 8;
+    p.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;background:${cols[i%cols.length]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.6+Math.random()*2}s;animation-delay:${Math.random()*0.9}s;`;
+    c.appendChild(p);
+    setTimeout(() => p.remove(), 4500);
+  }
+}
+
+// ============================================================
+// SCREENS
+// ============================================================
+
+function go(html) { document.getElementById('app').innerHTML = html; }
+
+// ---------- WELCOME ----------
+function showHome() {
+  const lbHtml = buildLb();
+  const ap = G.activePlayer;
+
+  go(`
+    <div>
+      <div class="game-header">
+        <div class="flag-strip"><div style="background:#006847"></div><div style="background:#fff"></div><div style="background:#ce1126"></div></div>
+        <div class="game-title">¡Vamos a México!</div>
+        <div class="text-sm text-gray mt-1">🇲🇽 Family Spanish — Mission Trip Course</div>
+        <div class="flag-strip"><div style="background:#006847"></div><div style="background:#fff"></div><div style="background:#ce1126"></div></div>
+      </div>
+
+      ${G.players.length === 0 ? `
+        <div class="card text-center" style="padding:32px 20px;">
+          <div style="font-size:3.5rem">🙏</div>
+          <h2 style="margin:10px 0 6px;">Ready for Mexico?</h2>
+          <p class="text-gray text-sm mb-4">Add each family member, pick a name &amp; avatar, then race through 10 Spanish levels!</p>
+          <button class="btn btn-primary btn-full btn-lg" onclick="showAddPlayer()">➕ Add Your First Player</button>
+        </div>
+      ` : `
+        <div class="card">
+          <div class="flex items-center justify-between mb-2">
+            <h3>👥 Who's playing?</h3>
+            <button class="btn btn-outline btn-sm" onclick="showAddPlayer()">+ Add</button>
+          </div>
+          <div class="player-chips">
+            ${G.players.map(p => `
+              <div style="display:flex;align-items:center;gap:4px;">
+                <div class="player-chip ${ap && ap.id===p.id?'sel':''}"
+                     style="background:${p.color}22; border-color:${ap&&ap.id===p.id?p.color:'transparent'};"
+                     onclick="pickPlayer('${enc(p.id)}')">
+                  <span>${p.avatar}</span><span>${enc(p.name)}</span>
+                </div>
+                <button onclick="showEditPlayer('${enc(p.id)}')" title="Edit profile"
+                  style="background:none;border:none;cursor:pointer;font-size:1rem;padding:4px;opacity:.55;transition:opacity .15s;"
+                  onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.55">✏️</button>
+              </div>
+            `).join('')}
+          </div>
+          ${ap ? `
+            <button class="btn btn-primary btn-full mt-3 btn-lg" onclick="showMap()">🗺️ ${enc(ap.name)}'s Levels →</button>
+          ` : `<p class="text-gray text-sm text-center mt-3">Tap a name to select player</p>`}
+          <button class="btn btn-ghost btn-full btn-sm mt-3" onclick="showSaveCode()">💾 Save / Restore Progress Code</button>
+        </div>
+      `}
+
+      ${lbHtml}
+
+      <div class="card" style="background:linear-gradient(135deg,#16a34a,#0f766e);color:white;border:none;">
+        <div class="text-xs uppercase" style="opacity:.75">This Week's Mission</div>
+        <div style="font-weight:800;font-size:1rem;margin:5px 0;">Orphanage + Community Outreach</div>
+        <div class="text-sm" style="opacity:.85;">🎪 Bounce houses &nbsp; ✂️ Haircuts &nbsp; 🚲 Bike repair &nbsp; ⛪ Worship</div>
+      </div>
+    </div>
+  `);
+}
+
+function buildLb() {
+  if (G.players.length === 0) return '';
+  const sorted = G.players.map(p => ({
+    ...p,
+    stars: totalStars(p.id),
+    pts: prog(p.id).points || 0,
+    done: Object.keys(prog(p.id).scores).length,
+  })).sort((a,b) => b.stars - a.stars || b.pts - a.pts);
+  const medals = ['🥇','🥈','🥉'];
+  return `
+    <div class="card">
+      <h3 class="mb-3">🏆 Leaderboard</h3>
+      ${sorted.map((p,i) => `
+        <div class="lb-item r${Math.min(i+1,4)}">
+          <div class="rank-badge" style="background:${i===0?'#fbbf24':i===1?'#94a3b8':i===2?'#d97706':'#e2e8f0'};color:${i<3?'#fff':'#64748b'}">
+            ${i<3?medals[i]:i+1}
+          </div>
+          <div style="font-size:1.6rem">${p.avatar}</div>
+          <div style="flex:1">
+            <div class="font-bold">${enc(p.name)}</div>
+            <div class="text-xs text-gray">${p.done} of ${LEVELS.length} levels done</div>
+          </div>
+          <div style="text-align:right">
+            <div style="color:#d97706;font-weight:700;font-size:.9rem">${'⭐'.repeat(Math.min(p.stars,10))}${p.stars>10?'…':''}</div>
+            <div class="text-xs text-gray">${p.pts} pts</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function pickPlayer(id) {
+  G.activePlayer = G.players.find(p => p.id === id) || null;
+  save();
+  showHome();
+}
+
+// ---------- EDIT PLAYER ----------
+function showEditPlayer(id) {
+  const player = G.players.find(p => p.id === id);
+  if (!player) return;
+  _av = player.avatar;
+  _cl = player.color;
+  go(`
+    <div>
+      <div class="flex items-center gap-2" style="padding:14px 0;">
+        <button class="back-btn" onclick="showHome()">←</button>
+        <h2>Edit Profile</h2>
+      </div>
+      <div class="card">
+        <h3 class="mb-2">Name</h3>
+        <input class="input-field" id="pname" value="${enc(player.name)}" maxlength="18" />
+
+        <h3 class="mb-2 mt-3">Choose Avatar</h3>
+        <div class="avatar-grid">
+          ${AVATARS.map(a=>`<div class="avatar-opt ${a===_av?'sel':''}" onclick="pickAv(this,'${a}')">${a}</div>`).join('')}
+        </div>
+
+        <h3 class="mb-2 mt-3">Choose Color</h3>
+        <div class="color-row">
+          ${COLORS.map(c=>`<div class="color-dot ${c===_cl?'sel':''}" style="background:${c}" onclick="pickCl(this,'${c}')"></div>`).join('')}
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg mt-4" onclick="saveEditPlayer('${enc(id)}')">✅ Save Changes</button>
+        <button class="btn btn-ghost btn-full mt-3" style="color:#dc2626;border-color:#fca5a5;" onclick="confirmDeletePlayer('${enc(id)}')">🗑️ Delete Player</button>
+      </div>
+    </div>
+  `);
+}
+
+function saveEditPlayer(id) {
+  const name = (document.getElementById('pname').value || '').trim();
+  if (!name) {
+    const f = document.getElementById('pname');
+    f.classList.add('error'); f.focus(); return;
+  }
+  const idx = G.players.findIndex(p => p.id === id);
+  if (idx === -1) return;
+  G.players[idx] = { ...G.players[idx], name, avatar: _av, color: _cl };
+  if (G.activePlayer && G.activePlayer.id === id) G.activePlayer = G.players[idx];
+  save();
+  showHome();
+}
+
+function confirmDeletePlayer(id) {
+  const player = G.players.find(p => p.id === id);
+  if (!player) return;
+  if (!confirm(`Delete ${player.name}? All progress will be lost.`)) return;
+  G.players = G.players.filter(p => p.id !== id);
+  delete G.progress[id];
+  if (G.activePlayer && G.activePlayer.id === id) G.activePlayer = null;
+  save();
+  showHome();
+}
+
+// ---------- SAVE / RESTORE via FILE ----------
+function showSaveCode() {
+  const hasPlayers = G.players.length > 0;
+  go(`
+    <div>
+      <div class="flex items-center gap-2" style="padding:14px 0;">
+        <button class="back-btn" onclick="showHome()">←</button>
+        <h2>💾 Save &amp; Restore</h2>
+      </div>
+
+      <div class="card">
+        <div style="font-size:2rem;text-align:center;margin-bottom:8px;">📲</div>
+        <h3 class="mb-2 text-center">Works on Any Device</h3>
+        <p class="text-sm text-gray text-center mb-3">
+          Save your progress as a file. Load it on any phone, tablet, or computer — no account needed.
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin:16px 0;">
+          <div style="background:#f8fafc;border-radius:12px;padding:12px 8px;">
+            <div style="font-size:1.6rem">💻</div>
+            <div class="text-xs text-gray mt-1">Mac / PC<br>Downloads folder</div>
+          </div>
+          <div style="background:#f8fafc;border-radius:12px;padding:12px 8px;">
+            <div style="font-size:1.6rem">📱</div>
+            <div class="text-xs text-gray mt-1">iPhone / iPad<br>Files app</div>
+          </div>
+          <div style="background:#f8fafc;border-radius:12px;padding:12px 8px;">
+            <div style="font-size:1.6rem">🤖</div>
+            <div class="text-xs text-gray mt-1">Android<br>Downloads folder</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="mb-1">⬇️ Save Progress to File</h3>
+        <p class="text-sm text-gray mb-3">Downloads a small file with everyone's scores and levels.</p>
+        ${hasPlayers ? `
+          <button class="btn btn-primary btn-full btn-lg" onclick="downloadSave()">
+            ⬇️ Download Progress File
+          </button>
+          <div id="dlMsg" style="text-align:center;font-size:.85rem;color:#16a34a;min-height:22px;margin-top:8px;"></div>
+        ` : `
+          <div class="text-gray text-sm text-center" style="padding:12px;background:#f8fafc;border-radius:10px;">
+            Add a player first before saving.
+          </div>
+        `}
+      </div>
+
+      <div class="card">
+        <h3 class="mb-1">⬆️ Load Progress from File</h3>
+        <p class="text-sm text-gray mb-3">Pick the progress file to restore everyone's scores on this device.</p>
+        <input type="file" id="saveFileInput" accept=".json,application/json"
+               style="display:none" onchange="loadSaveFile(this)">
+        <button class="btn btn-outline btn-full btn-lg" onclick="document.getElementById('saveFileInput').click()">
+          📂 Choose Progress File
+        </button>
+        <div id="ldMsg" style="text-align:center;font-size:.85rem;min-height:22px;margin-top:8px;"></div>
+      </div>
+    </div>
+  `);
+}
+
+function downloadSave() {
+  const data = { players: G.players, progress: G.progress, savedAt: new Date().toISOString() };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'vamos-mexico-progress.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  const msg = document.getElementById('dlMsg');
+  if (msg) msg.textContent = '✅ File downloaded! Share it to transfer progress.';
+}
+
+function loadSaveFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const msg = document.getElementById('ldMsg');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.players || !Array.isArray(data.players)) throw new Error('bad format');
+      const result = mergeSaveData(data);
+      save();
+      msg.style.color = '#16a34a';
+      msg.textContent = `✅ Merged! ${result.added} player(s) added, ${result.updated} updated. Redirecting...`;
+      setTimeout(showHome, 1400);
+    } catch(err) {
+      msg.style.color = '#dc2626';
+      msg.textContent = '❌ That file doesn\'t look right. Please try again.';
+    }
+  };
+  reader.onerror = function() {
+    msg.style.color = '#dc2626';
+    msg.textContent = '❌ Could not read file.';
+  };
+  reader.readAsText(file);
+}
+
+// Merge imported save data into current state.
+// Rules:
+//   - Player exists on both sides → keep best stars per level, update profile info
+//   - Player only in file         → add them and their progress
+//   - Player only on device       → leave untouched
+function mergeSaveData(imported) {
+  const importedProgress = imported.progress || {};
+  let added = 0, updated = 0;
+
+  imported.players.forEach(imp => {
+    const localIdx = G.players.findIndex(p => p.id === imp.id);
+    if (localIdx === -1) {
+      // Brand new player — add them wholesale
+      G.players.push(imp);
+      G.progress[imp.id] = importedProgress[imp.id] || { scores: {}, points: 0 };
+      added++;
+    } else {
+      // Player exists on both sides — merge profile + progress
+      G.players[localIdx] = { ...G.players[localIdx], ...imp }; // imported profile wins
+      const local  = prog(imp.id);
+      const remote = importedProgress[imp.id] || { scores: {}, points: 0 };
+
+      // Merge level scores: take whichever side earned more stars
+      const allLevelIds = new Set([
+        ...Object.keys(local.scores),
+        ...Object.keys(remote.scores)
+      ]);
+      allLevelIds.forEach(lid => {
+        const l = local.scores[lid];
+        const r = remote.scores[lid];
+        if (!l)                         local.scores[lid] = r;
+        else if (r && r.stars > l.stars) local.scores[lid] = r;
+        // else keep local (already the best)
+      });
+
+      // Recalculate points cleanly from merged scores
+      local.points = Object.values(local.scores)
+        .reduce((sum, s) => sum + s.stars * 100 + (s.score === 100 ? 50 : 0), 0);
+
+      if (G.activePlayer && G.activePlayer.id === imp.id) {
+        G.activePlayer = G.players[localIdx];
+      }
+      updated++;
+    }
+  });
+
+  return { added, updated };
+}
+
+// ---------- ADD PLAYER ----------
+let _av = '', _cl = '';
+
+function showAddPlayer() {
+  _av = AVATARS[Math.floor(Math.random()*AVATARS.length)];
+  _cl = COLORS[Math.floor(Math.random()*COLORS.length)];
+  go(`
+    <div>
+      <div class="flex items-center gap-2" style="padding:14px 0;">
+        <button class="back-btn" onclick="showHome()">←</button>
+        <h2>Add Family Member</h2>
+      </div>
+      <div class="card">
+        <h3 class="mb-2">Your Name</h3>
+        <input class="input-field" id="pname" placeholder="Enter your name..." maxlength="18" />
+
+        <h3 class="mb-2 mt-3">Choose Avatar</h3>
+        <div class="avatar-grid" id="avGrid">
+          ${AVATARS.map(a=>`<div class="avatar-opt ${a===_av?'sel':''}" onclick="pickAv(this,'${a}')">${a}</div>`).join('')}
+        </div>
+
+        <h3 class="mb-2 mt-3">Choose Color</h3>
+        <div class="color-row">
+          ${COLORS.map(c=>`<div class="color-dot ${c===_cl?'sel':''}" style="background:${c}" onclick="pickCl(this,'${c}')"></div>`).join('')}
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg mt-4" onclick="createPlayer()">✅ Create Player</button>
+      </div>
+    </div>
+  `);
+}
+
+function pickAv(el,av){ _av=av; document.querySelectorAll('.avatar-opt').forEach(e=>e.classList.remove('sel')); el.classList.add('sel'); }
+function pickCl(el,cl){ _cl=cl; document.querySelectorAll('.color-dot').forEach(e=>e.classList.remove('sel')); el.classList.add('sel'); }
+
+function createPlayer() {
+  const name = (document.getElementById('pname').value||'').trim();
+  if (!name) {
+    const f = document.getElementById('pname');
+    f.classList.add('error'); f.placeholder='Please enter a name!'; f.focus(); return;
+  }
+  const player = { id: Date.now().toString(), name, avatar: _av||'😊', color: _cl||'#16a34a' };
+  G.players.push(player);
+  G.activePlayer = player;
+  save();
+  showHome();
+}
+
+// ---------- LEVEL MAP ----------
+function showMap() {
+  if (!G.activePlayer) { showHome(); return; }
+  const ap = G.activePlayer;
+  const p = prog(ap.id);
+  const mu = maxUnlocked(ap.id);
+  const ts = totalStars(ap.id);
+  const maxS = LEVELS.length * 3;
+
+  go(`
+    <div>
+      <div class="flex items-center gap-2" style="padding:14px 0;">
+        <button class="back-btn" onclick="showHome()">←</button>
+        <div style="font-size:1.8rem">${ap.avatar}</div>
+        <div>
+          <div style="font-weight:800;font-size:1.05rem">${enc(ap.name)}'s Journey</div>
+          <div class="text-xs text-gray">⭐ ${ts} / ${maxS} stars earned</div>
+        </div>
+      </div>
+      <div class="progress-wrap mb-4" style="height:14px;">
+        <div class="progress-fill" style="width:${Math.round(ts/maxS*100)}%"></div>
+      </div>
+      <div class="level-grid">
+        ${LEVELS.map(lv => {
+          const sc = p.scores[lv.id];
+          const done = !!sc;
+          const unlocked = lv.id <= mu;
+          const isnext = lv.id === mu && !done;
+          return `
+            <div class="level-card ${!unlocked?'locked':''} ${done?'done':''} ${isnext?'next':''}"
+                 onclick="${unlocked?`startIntro(${lv.id})`:''}">
+              <div class="level-num">Level ${lv.id}</div>
+              <div class="level-emoji">${lv.emoji}</div>
+              <div class="level-title">${lv.title}</div>
+              <div class="level-sub">${lv.subtitle}</div>
+              ${done?`<div class="level-badge badge-done">${'⭐'.repeat(sc.stars)}</div>`:''}
+              ${isnext?`<div class="level-badge badge-now">NOW</div>`:''}
+              ${!unlocked?`<div style="position:absolute;top:50%;right:10px;transform:translateY(-50%);font-size:1.5rem;opacity:.35">🔒</div>`:''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `);
+}
+
+// ---------- LEVEL INTRO ----------
+function startIntro(id) {
+  const lv = LEVELS.find(l=>l.id===id);
+  if (!lv) return;
+  const prev = G.activePlayer ? prog(G.activePlayer.id).scores[id] : null;
+  go(`
+    <div class="bounce-in">
+      <div class="flex items-center gap-2" style="padding:14px 0;">
+        <button class="back-btn" onclick="showMap()">←</button>
+        <div class="text-sm text-gray">Level ${id} of ${LEVELS.length}</div>
+      </div>
+      <div class="card text-center" style="padding:28px 20px;">
+        <div style="font-size:4rem;margin-bottom:10px">${lv.emoji}</div>
+        <div class="text-xs text-gray uppercase">Level ${id}</div>
+        <h1 style="font-size:1.9rem;margin:8px 0;">${lv.title}</h1>
+        <div class="text-gray" style="font-size:1rem;">${lv.subtitle}</div>
+        <p class="text-sm text-gray mt-3">${lv.desc}</p>
+        ${prev?`
+          <div style="background:#fef9c3;border-radius:10px;padding:9px 14px;margin:14px 0;font-size:.88rem;">
+            Previous: ${'⭐'.repeat(prev.stars)}${'☆'.repeat(3-prev.stars)} (${prev.score}%)
+          </div>
+        `:''}
+      </div>
+      <div class="card">
+        <h3 class="mb-2">📚 Vocabulary Preview</h3>
+        <div class="vocab-grid">
+          ${lv.vocab.slice(0,8).map(v=>`<div class="vocab-item"><div class="vocab-es">${enc(v.es)}</div><div class="vocab-en">${enc(v.en)}</div></div>`).join('')}
+          ${lv.vocab.length>8?`<div class="vocab-item" style="opacity:.5"><div class="vocab-es">...and more!</div></div>`:''}
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="startLevel(${id})">🚀 Start Level ${id}!</button>
+    </div>
+  `);
+}
+
+// ---------- GAME ----------
+function startLevel(id) {
+  const lv = LEVELS.find(l=>l.id===id);
+  if (!lv) return;
+  G.level = lv;
+  G.questions = makeQuestions(lv);
+  G.qIdx = 0; G.score = 0; G.hearts = 3;
+  G.answers = []; G.answerLocked = false;
+  showQ();
+}
+
+function showQ() {
+  G.answerLocked = false;
+  const q = G.questions[G.qIdx];
+  const total = G.questions.length;
+  const pct = Math.round(G.qIdx / total * 100);
+
+  const isPassage = q.type === 'passage';
+  const isFill    = q.type === 'fill';
+  const longChoices = q.choices.some(c => c.length > 24);
+  const onecol = isPassage || isFill || longChoices;
+
+  let qCardHtml;
+  if (isPassage) {
+    const passageHtml = enc(q.prompt).replace(/\n/g, '<br>').replace(/^— /gm, '<span class="speaker">— </span>');
+    qCardHtml = `
+      <div class="q-card bounce-in" style="text-align:left;">
+        <div class="q-label" style="text-align:center;">${enc(q.label)}</div>
+        <div class="passage-block">${passageHtml}</div>
+      </div>`;
+  } else if (isFill) {
+    const filledHtml = enc(q.prompt).replace(/___/g, '<span class="blank-slot">___</span>').replace(/\n/g,'<br>');
+    qCardHtml = `
+      <div class="q-card bounce-in">
+        <div class="q-label">${enc(q.label)}</div>
+        <div class="fill-sentence">${filledHtml}</div>
+      </div>`;
+  } else {
+    qCardHtml = `
+      <div class="q-card bounce-in">
+        <div class="q-label">${enc(q.label)}</div>
+        <div class="q-text">${enc(q.prompt)}</div>
+      </div>`;
+  }
+
+  go(`
+    <div>
+      <div class="flex items-center gap-3" style="padding:12px 0;">
+        <button class="back-btn" onclick="quitConfirm()">✕</button>
+        <div class="progress-wrap" style="flex:1">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="hearts">
+          ${'❤️'.repeat(G.hearts)}${'🖤'.repeat(3-G.hearts)}
+        </div>
+      </div>
+      <div class="text-xs text-gray text-center mb-1">Question ${G.qIdx+1} of ${total}</div>
+      ${qCardHtml}
+      <div class="ans-grid" id="ansGrid" data-correct="${enc(q.correct)}"
+           style="grid-template-columns:${onecol?'1fr':'1fr 1fr'}">
+        ${q.choices.map(c=>`
+          <button class="ans-btn ${onecol?'tall':''}" data-val="${enc(c)}" onclick="checkAns(this)">
+            ${enc(c)}
+          </button>
+        `).join('')}
+      </div>
+      <div id="fb" style="min-height:58px;margin-top:10px;"></div>
+    </div>
+  `);
+}
+
+function checkAns(btn) {
+  if (G.answerLocked) return;
+  G.answerLocked = true;
+  const chosen = btn.getAttribute('data-val');
+  const correct = document.getElementById('ansGrid').getAttribute('data-correct');
+  const isOk = chosen === correct;
+  document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+
+  if (isOk) {
+    btn.classList.add('correct');
+    G.score += 10; G.answers.push(true);
+    beep('ok');
+    const phrases = ['¡Excelente! 🎉','¡Muy bien! ✅','¡Perfecto! 🌟','¡Correcto! 🔥','¡Sí! 👏','¡Increíble! 💪'];
+    document.getElementById('fb').innerHTML = `<div class="feedback-box ok">${phrases[Math.floor(Math.random()*phrases.length)]}</div>`;
+  } else {
+    btn.classList.add('wrong');
+    btn.classList.add('shake-it');
+    G.hearts--; G.answers.push(false);
+    beep('bad');
+    // highlight correct
+    document.querySelectorAll('.ans-btn').forEach(b => {
+      if (b.getAttribute('data-val') === correct) b.classList.add('correct');
+    });
+    document.getElementById('fb').innerHTML = `<div class="feedback-box bad">Correct answer: <strong>${enc(correct)}</strong></div>`;
+  }
+
+  const delay = isOk ? 1100 : 1700;
+  setTimeout(() => {
+    G.qIdx++;
+    if (G.qIdx >= G.questions.length || G.hearts <= 0) showComplete();
+    else showQ();
+  }, delay);
+}
+
+function quitConfirm() {
+  if (confirm('Quit this level? Your progress won\'t be saved.')) showMap();
+}
+
+// ---------- LEVEL COMPLETE ----------
+function showComplete() {
+  const lv = G.level;
+  const total = G.questions.length;
+  const correct = G.answers.filter(Boolean).length;
+  const pct = Math.round(correct / total * 100);
+  const stars = pct>=90?3 : pct>=70?2 : pct>=50?1 : 0;
+  const passed = stars > 0;
+
+  // save progress
+  if (passed && G.activePlayer) {
+    const p = prog(G.activePlayer.id);
+    const prev = p.scores[lv.id];
+    const bonus = pct===100 ? 50 : 0;
+    const newPts = stars*100 + bonus;
+    if (!prev || stars > prev.stars) {
+      const oldPts = prev ? prev.stars*100 : 0;
+      p.points = (p.points||0) + newPts - oldPts;
+      p.scores[lv.id] = { stars, score: pct };
+      save();
+    }
+    if (stars === 3 || !prev || stars > prev.stars) {
+      beep('win'); setTimeout(confetti, 350);
+    } else { beep('ok'); }
+  } else { beep('bad'); }
+
+  const next = LEVELS.find(l=>l.id===lv.id+1);
+
+  go(`
+    <div class="bounce-in" style="padding-bottom:24px;">
+      <div style="text-align:center;padding:28px 0 14px;">
+        <div class="text-xs text-gray uppercase" style="margin-bottom:8px;">${passed?'Level Complete! 🎊':'Keep Practicing!'}</div>
+        <div style="font-size:4rem">${passed?(stars===3?'🏆':stars===2?'🎯':'🌟'):'💪'}</div>
+        <div class="big-stars">
+          ${[1,2,3].map(s=>`<span class="star-slot" id="s${s}">⭐</span>`).join('')}
+        </div>
+        <div style="font-size:2.2rem;font-weight:900;">${pct}%</div>
+        <div class="text-gray text-sm">${correct} of ${total} correct</div>
+        ${passed ? `
+          <div style="background:#dcfce7;border-radius:12px;padding:9px 16px;margin:14px auto;font-size:.9rem;color:#15803d;font-weight:700;display:inline-block;">
+            +${stars*100}${pct===100?' + 50 bonus':''} points! 🎉
+          </div>
+        ` : `
+          <div style="background:#fee2e2;border-radius:12px;padding:9px 16px;margin:14px auto;font-size:.9rem;color:#dc2626;font-weight:700;display:inline-block;">
+            Need 50% to pass — you've got this!
+          </div>
+        `}
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-label">🇲🇽 Mission Trip Phrase</div>
+        <div class="tip-es">"${enc(lv.tip.es)}"</div>
+        <div class="tip-en">${enc(lv.tip.en)}</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${passed && next ? `<button class="btn btn-primary btn-full btn-lg" onclick="startIntro(${next.id})">➡️ Next: ${enc(next.title)}</button>` : ''}
+        ${passed && !next ? `<button class="btn btn-full btn-lg" style="background:#7c3aed;color:white;box-shadow:0 4px 0 #5b21b6;" onclick="showHome()">🇲🇽 ¡Felicidades! Course Complete!</button>` : ''}
+        <button class="btn btn-outline btn-full" onclick="startLevel(${lv.id})">🔄 ${passed?'Play Again for More Stars':'Try Again'}</button>
+        <button class="btn btn-ghost btn-full" onclick="showMap()">🗺️ Back to Level Map</button>
+      </div>
+    </div>
+  `);
+
+  // animate stars with delay
+  [1,2,3].forEach(s => {
+    setTimeout(() => {
+      const el = document.getElementById(`s${s}`);
+      if (el) {
+        if (s <= stars) el.classList.add('lit');
+        else { el.style.filter = 'grayscale(1) opacity(0.25)'; }
+      }
+    }, s * 350);
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+load();
+showHome();
+</script>
+
+<script>
+// ============================================================
+// SERVICE WORKER — inline registration
+// Injects the SW as a blob URL so it works from any origin,
+// including GitHub Pages, without a separate sw.js file.
+// ============================================================
+if ('serviceWorker' in navigator) {
+  const swCode = `
+const CACHE = 'vamos-mexico-v1';
+const OFFLINE_URL = self.location.href;
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE).then(cache => cache.add(OFFLINE_URL))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', event => {
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(OFFLINE_URL))
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then(r => r || fetch(event.request))
+    );
+  }
+});
+`;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, { scope: '/' })
+    .catch(() => {
+      // Blob-URL SW registration is blocked on some browsers (e.g. Firefox).
+      // Silently fail — the game still works, just without offline caching.
+    });
+}
+</script>
+</body>
+</html>
