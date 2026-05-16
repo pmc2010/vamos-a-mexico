@@ -159,6 +159,21 @@ h3 { font-size: 1rem; font-weight: 700; }
   .q-text { font-size: 1.6rem; }
   .game-title { font-size: 1.8rem; }
 }
+
+.dict-tabs { display:flex; gap:6px; margin-bottom:14px; }
+.dict-tab { flex:1; padding:9px 6px; border-radius:10px; font-size:0.8rem; font-weight:700; border:2px solid var(--border); background:white; cursor:pointer; transition:all 0.15s; color:var(--gray); text-align:center; }
+.dict-tab.active { background:var(--green); color:white; border-color:var(--green); }
+.dict-search { width:100%; padding:11px 16px; border:2.5px solid var(--border); border-radius:12px; font-size:1rem; outline:none; margin-bottom:12px; }
+.dict-search:focus { border-color:var(--green); }
+.dict-entry { display:flex; align-items:flex-start; gap:10px; padding:11px 14px; border-radius:12px; margin-bottom:6px; background:white; box-shadow:var(--shadow); cursor:pointer; transition:all 0.15s; }
+.dict-entry:hover { transform:translateX(3px); }
+.dict-es { font-weight:800; font-size:1rem; }
+.dict-en { font-size:0.85rem; color:var(--gray); }
+.dict-tag { font-size:0.65rem; font-weight:700; padding:2px 7px; border-radius:100px; flex-shrink:0; margin-top:2px; }
+.dict-section { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gray); padding:10px 4px 4px; }
+.explain-box { background:#fffbeb; border:2px solid #fbbf24; border-radius:10px; padding:10px 13px; font-size:0.85rem; margin-top:8px; animation:fadeUp 0.25s ease; }
+.explain-box .explain-why { color:#92400e; font-weight:600; }
+.explain-box .explain-correct { color:#15803d; font-weight:700; }
 </style>
 </head>
 <body>
@@ -522,16 +537,16 @@ const LEVELS = [
       table:{headers:['Word','Gender','Article'],rows:[['niño (boy)','Masculine','el / un'],['niña (girl)','Feminine','la / una'],['pelo (hair)','Masculine','el / un'],['familia (family)','Feminine','la / una'],['amor (love)','Masculine','el / un'],['iglesia (church)','Feminine','la / una']]},
     },
     questions:[
-      {type:'fill',label:'Choose the correct article.',prompt:'___ niño está feliz.',correct:'El',choices:['El','La','Un','Una']},
-      {type:'fill',label:'Choose the correct article.',prompt:'___ bicicleta está rota.',correct:'La',choices:['La','El','Un','Una']},
-      {type:'fill',label:'Choose the correct article.',prompt:'___ agua está fría.',correct:'El',choices:['El','La','Un','Una']},
-      {type:'fill',label:'Choose the correct article.',prompt:'___ iglesia es bonita.',correct:'La',choices:['La','El','Un','Una']},
-      {type:'fill',label:'Choose the correct article.',prompt:'Quiero ___ silla, por favor.',correct:'una',choices:['una','un','la','el']},
-      {type:'fill',label:'Choose the correct article.',prompt:'Hay ___ perro en la calle.',correct:'un',choices:['un','una','el','la']},
+      {type:'fill',label:'Choose the correct article.',prompt:'___ niño está feliz.',correct:'El',explain:'"Niño" (boy) is masculine → use EL',choices:['El','La','Un','Una']},
+      {type:'fill',label:'Choose the correct article.',prompt:'___ bicicleta está rota.',correct:'La',explain:'"Bicicleta" ends in -a → feminine → use LA',choices:['La','El','Un','Una']},
+      {type:'fill',label:'Choose the correct article.',prompt:'___ agua está fría.',correct:'El',explain:'"Agua" is feminine but takes EL for sound (special rule)',choices:['El','La','Un','Una']},
+      {type:'fill',label:'Choose the correct article.',prompt:'___ iglesia es bonita.',correct:'La',explain:'"Iglesia" ends in -a → feminine → use LA',choices:['La','El','Un','Una']},
+      {type:'fill',label:'Choose the correct article.',prompt:'Quiero ___ silla, por favor.',correct:'una',explain:'"Silla" is feminine → indefinite article is UNA',choices:['una','un','la','el']},
+      {type:'fill',label:'Choose the correct article.',prompt:'Hay ___ perro en la calle.',correct:'un',explain:'"Perro" ends in -o → masculine → use UN',choices:['un','una','el','la']},
       {type:'passage',label:'Which sentence uses articles correctly?',prompt:'Choose the correctly written sentence:',correct:'El niño tiene una bicicleta.',choices:['El niño tiene una bicicleta.','La niño tiene un bicicleta.','El niña tiene una bicicleta.','Un niño tiene el bicicleta.']},
       {type:'passage',label:'Which sentence uses articles correctly?',prompt:'Choose the correctly written sentence:',correct:'La familia tiene una casa.',choices:['La familia tiene una casa.','El familia tiene un casa.','La familia tiene un casa.','El familia tiene una casa.']},
-      {type:'fill',label:'Choose the correct article.',prompt:'___ amor de Dios es grande.',correct:'El',choices:['El','La','Un','Una']},
-      {type:'fill',label:'Choose the correct article.',prompt:'Necesito ___ llave para arreglar esto.',correct:'una',choices:['una','un','la','el']},
+      {type:'fill',label:'Choose the correct article.',prompt:'___ amor de Dios es grande.',correct:'El',explain:'"Amor" is masculine → use EL',choices:['El','La','Un','Una']},
+      {type:'fill',label:'Choose the correct article.',prompt:'Necesito ___ llave para arreglar esto.',correct:'una',explain:'"Llave" is feminine → indefinite article is UNA',choices:['una','un','la','el']},
     ]},
   { id:32, group:'grammar', isLesson:true, emoji:'👥', title:'Plural Forms', subtitle:'Singular to Plural',
     desc:'Learn how to talk about more than one person or thing.',
@@ -547,13 +562,13 @@ const LEVELS = [
       table:{headers:['Singular','Plural','Translation'],rows:[['el niño','los niños','the boys'],['la niña','las niñas','the girls'],['el amigo','los amigos','the friends'],['la bicicleta','las bicicletas','the bicycles'],['el color','los colores','the colors']]},
     },
     questions:[
-      {type:'fill',label:'Make this plural.',prompt:'el niño → ___ niños',correct:'los',choices:['los','las','unos','unas']},
-      {type:'fill',label:'Make this plural.',prompt:'la bicicleta → ___ bicicletas',correct:'las',choices:['las','los','unas','unos']},
+      {type:'fill',label:'Make this plural.',prompt:'el niño → ___ niños',correct:'los',explain:'EL (masculine singular) → LOS (masculine plural)',choices:['los','las','unos','unas']},
+      {type:'fill',label:'Make this plural.',prompt:'la bicicleta → ___ bicicletas',correct:'las',explain:'LA (feminine singular) → LAS (feminine plural)',choices:['las','los','unas','unos']},
       {type:'fill',label:'Choose the correct plural.',prompt:'Hay muchos ___ en la calle.',correct:'niños',choices:['niños','niño','niñas','niña']},
       {type:'passage',label:'Which sentence is correctly plural?',prompt:'We want to say "The boys want to play."',correct:'Los niños quieren jugar.',choices:['Los niños quieren jugar.','El niños quiere jugar.','Las niños quieren jugar.','Los niño quieren jugar.']},
-      {type:'fill',label:'Make this plural.',prompt:'un amigo → ___ amigos',correct:'unos',choices:['unos','unas','los','las']},
+      {type:'fill',label:'Make this plural.',prompt:'un amigo → ___ amigos',correct:'unos',explain:'UN (masculine singular) → UNOS (masculine plural)',choices:['unos','unas','los','las']},
       {type:'fill',label:'Choose the correct form.',prompt:'___ casas están aquí.',correct:'Las',choices:['Las','Los','Una','Un']},
-      {type:'fill',label:'Make this plural.',prompt:'la familia → ___ familias',correct:'las',choices:['las','los','unas','unos']},
+      {type:'fill',label:'Make this plural.',prompt:'la familia → ___ familias',correct:'las',explain:'LA (feminine singular) → LAS (feminine plural)',choices:['las','los','unas','unos']},
       {type:'passage',label:'Which sentence is correctly plural?',prompt:'We want to say "The bicycles are broken."',correct:'Las bicicletas están rotas.',choices:['Las bicicletas están rotas.','Los bicicletas están roto.','La bicicleta están rotas.','Las bicicletas está rota.']},
       {type:'fill',label:'Choose the correct plural.',prompt:'Los ___ están felices.',correct:'niños',choices:['niños','niño','niñas','familia']},
       {type:'passage',label:'Which sentence is correctly plural?',prompt:'We want to say "The friends are here."',correct:'Los amigos están aquí.',choices:['Los amigos están aquí.','El amigos está aquí.','Los amigo están aquí.','Las amigos están aquí.']},
@@ -571,16 +586,16 @@ const LEVELS = [
       table:{headers:['Pronoun','SER','ESTAR'],rows:[['Yo (I)','soy','estoy'],['Tú (you)','eres','estás'],['Él/Ella (he/she)','es','está'],['Nosotros (we)','somos','estamos'],['Ellos (they)','son','están']]},
     },
     questions:[
-      {type:'fill',label:'SER or ESTAR?',prompt:'Dios ___ bueno. (permanent truth)',correct:'es',choices:['es','está','son','están']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'¿Cómo ___ tú hoy?',correct:'estás',choices:['estás','eres','están','son']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'Nosotros ___ de los Estados Unidos.',correct:'somos',choices:['somos','estamos','son','están']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'La bicicleta ___ rota ahora.',correct:'está',choices:['está','es','estamos','somos']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'Yo ___ muy feliz hoy.',correct:'estoy',choices:['estoy','soy','están','son']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'Ella ___ mi amiga.',correct:'es',choices:['es','está','son','están']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'Los niños ___ en el parque ahora.',correct:'están',choices:['están','son','estamos','somos']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'Dios ___ bueno. (permanent truth)',correct:'es',explain:'Permanent truth → use SER. "Es" = he/she/it is',choices:['es','está','son','están']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'¿Cómo ___ tú hoy?',correct:'estás',explain:'Temporary state/feeling → use ESTAR. "Estás" = you are (right now)',choices:['estás','eres','están','son']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'Nosotros ___ de los Estados Unidos.',correct:'somos',explain:'Origin is permanent → use SER. "Somos" = we are',choices:['somos','estamos','son','están']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'La bicicleta ___ rota ahora.',correct:'está',explain:'Temporary condition → use ESTAR. "Está" = it is (right now)',choices:['está','es','estamos','somos']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'Yo ___ muy feliz hoy.',correct:'estoy',explain:'Temporary feeling → use ESTAR. "Estoy" = I am (right now)',choices:['estoy','soy','están','son']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'Ella ___ mi amiga.',correct:'es',explain:'Identity/relationship is permanent → use SER. "Es" = she is',choices:['es','está','son','están']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'Los niños ___ en el parque ahora.',correct:'están',explain:'Location is temporary → use ESTAR. "Están" = they are',choices:['están','son','estamos','somos']},
       {type:'passage',label:'Which sentence is correct?',prompt:'The bicycle is red. (permanent color)',correct:'La bicicleta es roja.',choices:['La bicicleta es roja.','La bicicleta está roja.','La bicicleta son roja.','La bicicleta están roja.']},
       {type:'passage',label:'Which sentence is correct?',prompt:'The children are tired right now.',correct:'Los niños están cansados.',choices:['Los niños están cansados.','Los niños son cansados.','Los niños estamos cansados.','Los niños somos cansados.']},
-      {type:'fill',label:'SER or ESTAR?',prompt:'¿Dónde ___ el baño?',correct:'está',choices:['está','es','estamos','somos']},
+      {type:'fill',label:'SER or ESTAR?',prompt:'¿Dónde ___ el baño?',correct:'está',explain:'Location → use ESTAR. "Está" = it is (where?)',choices:['está','es','estamos','somos']},
     ]},
   { id:34, group:'grammar', isLesson:true, emoji:'🕐', title:'Verbos -AR', subtitle:'Present Tense',
     desc:'Learn how to conjugate -AR verbs in the present tense. This unlocks hundreds of verbs!',
@@ -594,13 +609,13 @@ const LEVELS = [
       table:{headers:['Who','Ending','Example (hablar)'],rows:[['Yo (I)','-o','hablo'],['Tú (you)','-as','hablas'],['Él/Ella (he/she)','-a','habla'],['Nosotros (we)','-amos','hablamos'],['Ellos (they)','-an','hablan']]},
     },
     questions:[
-      {type:'fill',label:'Conjugate the verb.',prompt:'Yo ___ español. (hablar)',correct:'hablo',choices:['hablo','hablas','habla','hablan']},
-      {type:'fill',label:'Conjugate the verb.',prompt:'Tú ___ muy bien. (cantar)',correct:'cantas',choices:['cantas','canto','canta','cantan']},
+      {type:'fill',label:'Conjugate the verb.',prompt:'Yo ___ español. (hablar)',correct:'hablo',explain:'YO + -AR verb → drop -AR, add -O: hablar → hablo',choices:['hablo','hablas','habla','hablan']},
+      {type:'fill',label:'Conjugate the verb.',prompt:'Tú ___ muy bien. (cantar)',correct:'cantas',explain:'TÚ + -AR verb → drop -AR, add -AS: cantar → cantas',choices:['cantas','canto','canta','cantan']},
       {type:'fill',label:'Conjugate the verb.',prompt:'Ella ___ con los niños. (jugar)',correct:'juega',choices:['juega','juego','juegas','juegan']},
-      {type:'fill',label:'Conjugate the verb.',prompt:'Nosotros ___ juntos. (caminar)',correct:'caminamos',choices:['caminamos','caminan','caminas','camino']},
-      {type:'fill',label:'Conjugate the verb.',prompt:'Ellos ___ mucho. (trabajar)',correct:'trabajan',choices:['trabajan','trabajamos','trabajas','trabajo']},
+      {type:'fill',label:'Conjugate the verb.',prompt:'Nosotros ___ juntos. (caminar)',correct:'caminamos',explain:'NOSOTROS + -AR verb → drop -AR, add -AMOS: caminar → caminamos',choices:['caminamos','caminan','caminas','camino']},
+      {type:'fill',label:'Conjugate the verb.',prompt:'Ellos ___ mucho. (trabajar)',correct:'trabajan',explain:'ELLOS + -AR verb → drop -AR, add -AN: trabajar → trabajan',choices:['trabajan','trabajamos','trabajas','trabajo']},
       {type:'fill',label:'Conjugate the verb.',prompt:'Yo ___ la bicicleta. (arreglar)',correct:'arreglo',choices:['arreglo','arreglas','arregla','arreglan']},
-      {type:'fill',label:'Conjugate the verb.',prompt:'¿Tú ___ inglés? (hablar)',correct:'hablas',choices:['hablas','hablo','habla','hablan']},
+      {type:'fill',label:'Conjugate the verb.',prompt:'¿Tú ___ inglés? (hablar)',correct:'hablas',explain:'TÚ + hablar → drop -AR, add -AS → hablas',choices:['hablas','hablo','habla','hablan']},
       {type:'passage',label:'Which sentence is correct?',prompt:'We want to say "We sing together."',correct:'Nosotros cantamos juntos.',choices:['Nosotros cantamos juntos.','Nosotros cantan juntos.','Nosotros canto juntos.','Nosotros cantas juntos.']},
       {type:'fill',label:'Conjugate the verb.',prompt:'Los niños ___ en el parque. (jugar)',correct:'juegan',choices:['juegan','juega','jugamos','juegas']},
       {type:'passage',label:'Which sentence is correct?',prompt:'We want to say "She walks to the church."',correct:'Ella camina a la iglesia.',choices:['Ella camina a la iglesia.','Ella caminan a la iglesia.','Ella camino a la iglesia.','Ella caminamos a la iglesia.']},
@@ -666,15 +681,15 @@ const LEVELS = [
       table:{headers:['Who','Tener (have)','Querer (want)'],rows:[['Yo','tengo','quiero'],['Tú','tienes','quieres'],['Él/Ella','tiene','quiere'],['Nosotros','tenemos','queremos'],['Ellos','tienen','quieren']]},
     },
     questions:[
-      {type:'fill',label:'Conjugate TENER.',prompt:'Yo ___ hambre.',correct:'tengo',choices:['tengo','tienes','tiene','tienen']},
-      {type:'fill',label:'Conjugate QUERER.',prompt:'¿Tú ___ jugar?',correct:'quieres',choices:['quieres','quiero','quiere','quieren']},
-      {type:'fill',label:'Conjugate TENER.',prompt:'Ella ___ tres hermanos.',correct:'tiene',choices:['tiene','tengo','tienes','tienen']},
-      {type:'fill',label:'Conjugate QUERER.',prompt:'Nosotros ___ ayudar.',correct:'queremos',choices:['queremos','quieren','quieres','quiero']},
-      {type:'fill',label:'Conjugate TENER.',prompt:'Los niños ___ sed.',correct:'tienen',choices:['tienen','tenemos','tienes','tengo']},
+      {type:'fill',label:'Conjugate TENER.',prompt:'Yo ___ hambre.',correct:'tengo',explain:'TENER is irregular: YO form is TENGO (not "teno")',choices:['tengo','tienes','tiene','tienen']},
+      {type:'fill',label:'Conjugate QUERER.',prompt:'¿Tú ___ jugar?',correct:'quieres',explain:'QUERER is stem-changing: e→ie. TÚ form: quieres',choices:['quieres','quiero','quiere','quieren']},
+      {type:'fill',label:'Conjugate TENER.',prompt:'Ella ___ tres hermanos.',correct:'tiene',explain:'TENER stem-changing: e→ie. ÉL/ELLA form: tiene',choices:['tiene','tengo','tienes','tienen']},
+      {type:'fill',label:'Conjugate QUERER.',prompt:'Nosotros ___ ayudar.',correct:'queremos',explain:'NOSOTROS does NOT change: queremos (no stem change)',choices:['queremos','quieren','quieres','quiero']},
+      {type:'fill',label:'Conjugate TENER.',prompt:'Los niños ___ sed.',correct:'tienen',explain:'TENER: ELLOS form = tienen (e→ie stem change)',choices:['tienen','tenemos','tienes','tengo']},
       {type:'fill',label:'Conjugate QUERER.',prompt:'Ella ___ orar por ti.',correct:'quiere',choices:['quiere','quiero','quieres','quieren']},
       {type:'passage',label:'Which sentence is correct?',prompt:'We want to say "I want to pray for you."',correct:'Yo quiero orar por ti.',choices:['Yo quiero orar por ti.','Yo quieres orar por ti.','Yo quieren orar por ti.','Yo queremos orar por ti.']},
       {type:'passage',label:'Which sentence is correct?',prompt:'We want to say "The children are hungry."',correct:'Los niños tienen hambre.',choices:['Los niños tienen hambre.','Los niños tengo hambre.','Los niños tienes hambre.','Los niños tenemos hambre.']},
-      {type:'fill',label:'Conjugate TENER.',prompt:'¿Cuántos años ___ tú?',correct:'tienes',choices:['tienes','tengo','tiene','tienen']},
+      {type:'fill',label:'Conjugate TENER.',prompt:'¿Cuántos años ___ tú?',correct:'tienes',explain:'TENER: TÚ form = tienes (e→ie stem change)',choices:['tienes','tengo','tiene','tienen']},
       {type:'fill',label:'Conjugate QUERER.',prompt:'Yo ___ ser tu amigo.',correct:'quiero',choices:['quiero','quieres','quiere','queremos']},
     ]},
   { id:38, group:'grammar', isLesson:true, emoji:'🗺️', title:'Ir — To Go', subtitle:'Going Places',
@@ -690,11 +705,11 @@ const LEVELS = [
       table:{headers:['Who','IR','Example'],rows:[['Yo','voy','Voy a México.'],['Tú','vas','¿Vas a la iglesia?'],['Él/Ella','va','Va a comer.'],['Nosotros','vamos','¡Vamos!'],['Ellos','van','Van a ayudar.']]},
     },
     questions:[
-      {type:'fill',label:'Conjugate IR.',prompt:'Yo ___ a México.',correct:'voy',choices:['voy','vas','va','vamos']},
-      {type:'fill',label:'Conjugate IR.',prompt:'¿Tú ___ a la iglesia?',correct:'vas',choices:['vas','voy','va','van']},
-      {type:'fill',label:'Conjugate IR.',prompt:'Ella ___ a orar.',correct:'va',choices:['va','voy','vas','vamos']},
-      {type:'fill',label:'Conjugate IR.',prompt:'¡___ a ayudar! (We)',correct:'Vamos',choices:['Vamos','Van','Voy','Vas']},
-      {type:'fill',label:'Conjugate IR.',prompt:'Los niños ___ al parque.',correct:'van',choices:['van','vamos','va','voy']},
+      {type:'fill',label:'Conjugate IR.',prompt:'Yo ___ a México.',correct:'voy',explain:'IR is fully irregular. YO form = VOY',choices:['voy','vas','va','vamos']},
+      {type:'fill',label:'Conjugate IR.',prompt:'¿Tú ___ a la iglesia?',correct:'vas',explain:'IR is fully irregular. TÚ form = VAS',choices:['vas','voy','va','van']},
+      {type:'fill',label:'Conjugate IR.',prompt:'Ella ___ a orar.',correct:'va',explain:'IR is fully irregular. ÉL/ELLA form = VA',choices:['va','voy','vas','vamos']},
+      {type:'fill',label:'Conjugate IR.',prompt:'¡___ a ayudar! (We)',correct:'Vamos',explain:'IR: NOSOTROS form = VAMOS. Also means "Let\'s go!"',choices:['Vamos','Van','Voy','Vas']},
+      {type:'fill',label:'Conjugate IR.',prompt:'Los niños ___ al parque.',correct:'van',explain:'IR: ELLOS form = VAN',choices:['van','vamos','va','voy']},
       {type:'fill',label:'Future with IR + A.',prompt:'Yo ___ a cantar esta noche.',correct:'voy',choices:['voy','vas','va','vamos']},
       {type:'passage',label:"Which means 'Let\'s go to the church!'?",prompt:'Choose the correct sentence:',correct:'¡Vamos a la iglesia!',choices:['¡Vamos a la iglesia!','¡Van a la iglesia!','¡Voy a la iglesia!','¡Vas a la iglesia!']},
       {type:'passage',label:"Which means 'She is going to sing.'?",prompt:'Choose the correct sentence:',correct:'Ella va a cantar.',choices:['Ella va a cantar.','Ella voy a cantar.','Ella vamos a cantar.','Ella vas a cantar.']},
@@ -739,16 +754,16 @@ const LEVELS = [
       table:{headers:['Pronoun','Reflexive','Example'],rows:[['Yo','me','Me llamo Ana.'],['Tú','te','¿Cómo te llamas?'],['Él/Ella','se','Se llama Carlos.'],['Nosotros','nos','Nos llamamos...'],['Ellos','se','Se llaman...']]},
     },
     questions:[
-      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'___ llamo Pedro.',correct:'Me',choices:['Me','Te','Se','Nos']},
-      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'¿Cómo ___ llamas?',correct:'te',choices:['te','me','se','nos']},
-      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'Ella ___ llama María.',correct:'se',choices:['se','me','te','nos']},
-      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'Nosotros ___ sentimos bien.',correct:'nos',choices:['nos','me','te','se']},
+      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'___ llamo Pedro.',correct:'Me',explain:'YO uses reflexive pronoun ME: Me llamo = My name is',choices:['Me','Te','Se','Nos']},
+      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'¿Cómo ___ llamas?',correct:'te',explain:'TÚ uses reflexive pronoun TE: ¿Cómo te llamas? = What\'s your name?',choices:['te','me','se','nos']},
+      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'Ella ___ llama María.',correct:'se',explain:'ÉL/ELLA uses reflexive pronoun SE: Se llama = Her name is',choices:['se','me','te','nos']},
+      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'Nosotros ___ sentimos bien.',correct:'nos',explain:'NOSOTROS uses reflexive pronoun NOS',choices:['nos','me','te','se']},
       {type:'passage',label:'Which means "My name is Carlos"?',prompt:'Choose the correct sentence:',correct:'Me llamo Carlos.',choices:['Me llamo Carlos.','Te llamo Carlos.','Se llamo Carlos.','Nos llamo Carlos.']},
       {type:'passage',label:'Which means "What is her name?"?',prompt:'Choose the correct sentence:',correct:'¿Cómo se llama?',choices:['¿Cómo se llama?','¿Cómo me llama?','¿Cómo te llama?','¿Cómo nos llama?']},
       {type:'fill',label:'Choose the correct form.',prompt:'Los niños ___ llaman Juan y Diego.',correct:'se',choices:['se','me','te','nos']},
-      {type:'fill',label:'Choose the correct form.',prompt:'Yo ___ siento muy cansado.',correct:'me',choices:['me','te','se','nos']},
+      {type:'fill',label:'Choose the correct form.',prompt:'Yo ___ siento muy cansado.',correct:'me',explain:'YO uses reflexive pronoun ME with sentirse',choices:['me','te','se','nos']},
       {type:'passage',label:'Which means "We feel happy"?',prompt:'Choose the correct sentence:',correct:'Nos sentimos felices.',choices:['Nos sentimos felices.','Me sentimos felices.','Se sentimos felices.','Te sentimos felices.']},
-      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'¿Cómo ___ sientes hoy?',correct:'te',choices:['te','me','se','nos']},
+      {type:'fill',label:'Choose the correct reflexive pronoun.',prompt:'¿Cómo ___ sientes hoy?',correct:'te',explain:'TÚ uses reflexive pronoun TE with sentirse',choices:['te','me','se','nos']},
     ]},
   { id:41, group:'grammar', isLesson:true, emoji:'⏮️', title:'Pretérito', subtitle:'Past Actions',
     desc:'Talk about what happened in the past using the preterite (simple past) tense.',
@@ -901,16 +916,16 @@ const LEVELS = [
       table:{headers:['POR','PARA'],rows:[['Gracias por tu ayuda.','Este pan es para ti.'],['Oro por los niños.','Vamos para la iglesia.'],['Trabajé por dos horas.','Estudio para aprender.'],['Lo cambié por agua.','Es para mañana.']]},
     },
     questions:[
-      {type:'fill',label:'POR or PARA?',prompt:'Este regalo es ___ ti.',correct:'para',choices:['para','por','a','de']},
-      {type:'fill',label:'POR or PARA?',prompt:'Gracias ___ tu ayuda.',correct:'por',choices:['por','para','de','a']},
-      {type:'fill',label:'POR or PARA?',prompt:'Vamos ___ México mañana.',correct:'para',choices:['para','por','en','a']},
-      {type:'fill',label:'POR or PARA?',prompt:'Oro ___ ti cada día.',correct:'por',choices:['por','para','con','de']},
-      {type:'fill',label:'POR or PARA?',prompt:'Trabajamos ___ tres horas.',correct:'por',choices:['por','para','en','a']},
-      {type:'fill',label:'POR or PARA?',prompt:'El pan es ___ los niños.',correct:'para',choices:['para','por','de','con']},
+      {type:'fill',label:'POR or PARA?',prompt:'Este regalo es ___ ti.',correct:'para',explain:'PARA = recipient ("for you" = the gift is meant FOR you)',choices:['para','por','a','de']},
+      {type:'fill',label:'POR or PARA?',prompt:'Gracias ___ tu ayuda.',correct:'por',explain:'POR = reason/cause (thanks BECAUSE OF your help)',choices:['por','para','de','a']},
+      {type:'fill',label:'POR or PARA?',prompt:'Vamos ___ México mañana.',correct:'para',explain:'PARA = destination (heading TO Mexico)',choices:['para','por','en','a']},
+      {type:'fill',label:'POR or PARA?',prompt:'Oro ___ ti cada día.',correct:'por',explain:'POR = on behalf of (praying ON BEHALF OF you)',choices:['por','para','con','de']},
+      {type:'fill',label:'POR or PARA?',prompt:'Trabajamos ___ tres horas.',correct:'por',explain:'POR = duration (worked FOR three hours)',choices:['por','para','en','a']},
+      {type:'fill',label:'POR or PARA?',prompt:'El pan es ___ los niños.',correct:'para',explain:'PARA = recipient (the bread is FOR the children)',choices:['para','por','de','con']},
       {type:'passage',label:'Which uses POR correctly?',prompt:'Choose the sentence where POR is used correctly:',correct:'Gracias por la comida.',choices:['Gracias por la comida.','Gracias para la comida.','Gracias de la comida.','Gracias en la comida.']},
       {type:'passage',label:'Which uses PARA correctly?',prompt:'Choose the sentence where PARA is used correctly:',correct:'Este mensaje es para ti.',choices:['Este mensaje es para ti.','Este mensaje es por ti.','Este mensaje es de ti.','Este mensaje es con ti.']},
-      {type:'fill',label:'POR or PARA?',prompt:'Estamos aquí ___ servir.',correct:'para',choices:['para','por','de','a']},
-      {type:'fill',label:'POR or PARA?',prompt:'Lo compré ___ cinco dólares.',correct:'por',choices:['por','para','de','en']},
+      {type:'fill',label:'POR or PARA?',prompt:'Estamos aquí ___ servir.',correct:'para',explain:'PARA = purpose (here IN ORDER TO serve)',choices:['para','por','de','a']},
+      {type:'fill',label:'POR or PARA?',prompt:'Lo compré ___ cinco dólares.',correct:'por',explain:'POR = exchange (bought it FOR/IN EXCHANGE FOR $5)',choices:['por','para','de','en']},
     ]},
   { id:49, group:'grammar', isLesson:true, emoji:'🌊', title:'El Imperfecto', subtitle:'Ongoing Past',
     desc:'The imperfect describes ongoing or repeated past actions — what used to happen.',
@@ -1117,6 +1132,301 @@ const LEVELS = [
     ]},
 ]; // END LEVELS
 
+// ============================================================
+// DICTIONARY DATA
+// ============================================================
+const DICT_ENTRIES = [
+  // Greetings & Phrases
+  {es:'hola',en:'hello',type:'greeting',topic:'Greetings'},
+  {es:'adiós',en:'goodbye',type:'greeting',topic:'Greetings'},
+  {es:'buenos días',en:'good morning',type:'greeting',topic:'Greetings'},
+  {es:'buenas noches',en:'good night',type:'greeting',topic:'Greetings'},
+  {es:'por favor',en:'please',type:'phrase',topic:'Greetings'},
+  {es:'gracias',en:'thank you',type:'phrase',topic:'Greetings'},
+  {es:'de nada',en:"you're welcome",type:'phrase',topic:'Greetings'},
+  {es:'perdón',en:'excuse me',type:'phrase',topic:'Greetings'},
+  {es:'sí',en:'yes',type:'phrase',topic:'Greetings'},
+  {es:'no',en:'no',type:'phrase',topic:'Greetings'},
+  {es:'¿Cómo te llamas?',en:"What's your name?",type:'phrase',topic:'Introductions'},
+  {es:'Me llamo...',en:'My name is...',type:'phrase',topic:'Introductions'},
+  {es:'¿Cómo estás?',en:'How are you?',type:'phrase',topic:'Introductions'},
+  {es:'Estoy bien',en:'I am well',type:'phrase',topic:'Introductions'},
+  {es:'¿De dónde eres?',en:'Where are you from?',type:'phrase',topic:'Introductions'},
+  {es:'¿Cuántos años tienes?',en:'How old are you?',type:'phrase',topic:'Introductions'},
+  {es:'¿Hablas inglés?',en:'Do you speak English?',type:'phrase',topic:'Introductions'},
+  {es:'No entiendo',en:"I don't understand",type:'phrase',topic:'Introductions'},
+  {es:'Más despacio, por favor',en:'Slower, please',type:'phrase',topic:'Introductions'},
+  {es:'¿Puedo ayudarte?',en:'Can I help you?',type:'phrase',topic:'Introductions'},
+  // Numbers
+  {es:'uno',en:'one',type:'number',topic:'Numbers'},
+  {es:'dos',en:'two',type:'number',topic:'Numbers'},
+  {es:'tres',en:'three',type:'number',topic:'Numbers'},
+  {es:'cuatro',en:'four',type:'number',topic:'Numbers'},
+  {es:'cinco',en:'five',type:'number',topic:'Numbers'},
+  {es:'seis',en:'six',type:'number',topic:'Numbers'},
+  {es:'siete',en:'seven',type:'number',topic:'Numbers'},
+  {es:'ocho',en:'eight',type:'number',topic:'Numbers'},
+  {es:'nueve',en:'nine',type:'number',topic:'Numbers'},
+  {es:'diez',en:'ten',type:'number',topic:'Numbers'},
+  {es:'once',en:'eleven',type:'number',topic:'Numbers'},
+  {es:'doce',en:'twelve',type:'number',topic:'Numbers'},
+  {es:'quince',en:'fifteen',type:'number',topic:'Numbers'},
+  {es:'veinte',en:'twenty',type:'number',topic:'Numbers'},
+  {es:'treinta',en:'thirty',type:'number',topic:'Numbers'},
+  {es:'cuarenta',en:'forty',type:'number',topic:'Numbers'},
+  {es:'cincuenta',en:'fifty',type:'number',topic:'Numbers'},
+  {es:'sesenta',en:'sixty',type:'number',topic:'Numbers'},
+  {es:'setenta',en:'seventy',type:'number',topic:'Numbers'},
+  {es:'ochenta',en:'eighty',type:'number',topic:'Numbers'},
+  {es:'noventa',en:'ninety',type:'number',topic:'Numbers'},
+  {es:'cien',en:'one hundred',type:'number',topic:'Numbers'},
+  {es:'muchos',en:'many / a lot',type:'adjective',topic:'Numbers'},
+  // Family
+  {es:'mamá',en:'mom',type:'noun',topic:'Family'},
+  {es:'papá',en:'dad',type:'noun',topic:'Family'},
+  {es:'niño',en:'boy / child',type:'noun',topic:'Family'},
+  {es:'niña',en:'girl / child',type:'noun',topic:'Family'},
+  {es:'bebé',en:'baby',type:'noun',topic:'Family'},
+  {es:'hermano',en:'brother',type:'noun',topic:'Family'},
+  {es:'hermana',en:'sister',type:'noun',topic:'Family'},
+  {es:'familia',en:'family',type:'noun',topic:'Family'},
+  {es:'amigo',en:'friend (boy)',type:'noun',topic:'Family'},
+  {es:'amiga',en:'friend (girl)',type:'noun',topic:'Family'},
+  // Colors
+  {es:'rojo',en:'red',type:'adjective',topic:'Colors'},
+  {es:'azul',en:'blue',type:'adjective',topic:'Colors'},
+  {es:'verde',en:'green',type:'adjective',topic:'Colors'},
+  {es:'amarillo',en:'yellow',type:'adjective',topic:'Colors'},
+  {es:'naranja',en:'orange',type:'adjective',topic:'Colors'},
+  {es:'morado',en:'purple',type:'adjective',topic:'Colors'},
+  {es:'blanco',en:'white',type:'adjective',topic:'Colors'},
+  {es:'negro',en:'black',type:'adjective',topic:'Colors'},
+  {es:'rosado',en:'pink',type:'adjective',topic:'Colors'},
+  {es:'café',en:'brown',type:'adjective',topic:'Colors'},
+  // Haircut
+  {es:'pelo',en:'hair',type:'noun',topic:'Haircut Station'},
+  {es:'cabeza',en:'head',type:'noun',topic:'Haircut Station'},
+  {es:'cara',en:'face',type:'noun',topic:'Haircut Station'},
+  {es:'cortar',en:'to cut',type:'verb',topic:'Haircut Station'},
+  {es:'largo',en:'long',type:'adjective',topic:'Haircut Station'},
+  {es:'corto',en:'short',type:'adjective',topic:'Haircut Station'},
+  {es:'listo',en:'ready / done',type:'adjective',topic:'Haircut Station'},
+  {es:'bonito',en:'beautiful / nice',type:'adjective',topic:'Haircut Station'},
+  {es:'espejo',en:'mirror',type:'noun',topic:'Haircut Station'},
+  {es:'silla',en:'chair',type:'noun',topic:'Haircut Station'},
+  // Bikes
+  {es:'bicicleta',en:'bicycle',type:'noun',topic:'Bike Repair'},
+  {es:'rueda',en:'wheel',type:'noun',topic:'Bike Repair'},
+  {es:'llave',en:'wrench / key',type:'noun',topic:'Bike Repair'},
+  {es:'arreglar',en:'to fix',type:'verb',topic:'Bike Repair'},
+  {es:'ayuda',en:'help',type:'noun',topic:'Bike Repair'},
+  {es:'necesitar',en:'to need',type:'verb',topic:'Bike Repair'},
+  {es:'roto',en:'broken',type:'adjective',topic:'Bike Repair'},
+  {es:'nuevo',en:'new',type:'adjective',topic:'Bike Repair'},
+  // Food & Water
+  {es:'agua',en:'water',type:'noun',topic:'Food & Water'},
+  {es:'comida',en:'food',type:'noun',topic:'Food & Water'},
+  {es:'pan',en:'bread',type:'noun',topic:'Food & Water'},
+  {es:'leche',en:'milk',type:'noun',topic:'Food & Water'},
+  {es:'hambre',en:'hunger',type:'noun',topic:'Food & Water'},
+  {es:'sed',en:'thirst',type:'noun',topic:'Food & Water'},
+  {es:'comer',en:'to eat',type:'verb',topic:'Food & Water'},
+  {es:'beber',en:'to drink',type:'verb',topic:'Food & Water'},
+  {es:'delicioso',en:'delicious',type:'adjective',topic:'Food & Water'},
+  {es:'más',en:'more',type:'phrase',topic:'Food & Water'},
+  // Faith
+  {es:'Dios',en:'God',type:'noun',topic:'Faith & Church'},
+  {es:'Jesús',en:'Jesus',type:'noun',topic:'Faith & Church'},
+  {es:'amor',en:'love',type:'noun',topic:'Faith & Church'},
+  {es:'orar',en:'to pray',type:'verb',topic:'Faith & Church'},
+  {es:'Biblia',en:'Bible',type:'noun',topic:'Faith & Church'},
+  {es:'cantar',en:'to sing',type:'verb',topic:'Faith & Church'},
+  {es:'iglesia',en:'church',type:'noun',topic:'Faith & Church'},
+  {es:'bendición',en:'blessing',type:'noun',topic:'Faith & Church'},
+  {es:'fe',en:'faith',type:'noun',topic:'Faith & Church'},
+  {es:'paz',en:'peace',type:'noun',topic:'Faith & Church'},
+  {es:'Dios te ama.',en:'God loves you.',type:'phrase',topic:'Faith & Church'},
+  {es:'Jesús te ama',en:'Jesus loves you',type:'phrase',topic:'Faith & Church'},
+  {es:'¿Puedo orar por ti?',en:'Can I pray for you?',type:'phrase',topic:'Faith & Church'},
+  {es:'Amén.',en:'Amen.',type:'phrase',topic:'Faith & Church'},
+  // Body Parts
+  {es:'ojo',en:'eye',type:'noun',topic:'Body'},
+  {es:'nariz',en:'nose',type:'noun',topic:'Body'},
+  {es:'boca',en:'mouth',type:'noun',topic:'Body'},
+  {es:'oreja',en:'ear',type:'noun',topic:'Body'},
+  {es:'mano',en:'hand',type:'noun',topic:'Body'},
+  {es:'pie',en:'foot',type:'noun',topic:'Body'},
+  {es:'brazo',en:'arm',type:'noun',topic:'Body'},
+  {es:'rodilla',en:'knee',type:'noun',topic:'Body'},
+  {es:'espalda',en:'back',type:'noun',topic:'Body'},
+  {es:'corazón',en:'heart',type:'noun',topic:'Body'},
+  // Animals
+  {es:'perro',en:'dog',type:'noun',topic:'Animals'},
+  {es:'gato',en:'cat',type:'noun',topic:'Animals'},
+  {es:'pájaro',en:'bird',type:'noun',topic:'Animals'},
+  {es:'pez',en:'fish',type:'noun',topic:'Animals'},
+  {es:'caballo',en:'horse',type:'noun',topic:'Animals'},
+  {es:'vaca',en:'cow',type:'noun',topic:'Animals'},
+  {es:'pollo',en:'chicken',type:'noun',topic:'Animals'},
+  {es:'conejo',en:'rabbit',type:'noun',topic:'Animals'},
+  {es:'mariposa',en:'butterfly',type:'noun',topic:'Animals'},
+  {es:'burro',en:'donkey',type:'noun',topic:'Animals'},
+  // Weather
+  {es:'calor',en:'heat / hot',type:'noun',topic:'Weather'},
+  {es:'frío',en:'cold',type:'noun',topic:'Weather'},
+  {es:'sol',en:'sun',type:'noun',topic:'Weather'},
+  {es:'lluvia',en:'rain',type:'noun',topic:'Weather'},
+  {es:'viento',en:'wind',type:'noun',topic:'Weather'},
+  {es:'nublado',en:'cloudy',type:'adjective',topic:'Weather'},
+  {es:'húmedo',en:'humid',type:'adjective',topic:'Weather'},
+  {es:'afuera',en:'outside',type:'phrase',topic:'Weather'},
+  {es:'sombra',en:'shade / shadow',type:'noun',topic:'Weather'},
+  // Places
+  {es:'baño',en:'bathroom',type:'noun',topic:'Places'},
+  {es:'escuela',en:'school',type:'noun',topic:'Places'},
+  {es:'parque',en:'park',type:'noun',topic:'Places'},
+  {es:'mercado',en:'market',type:'noun',topic:'Places'},
+  {es:'hospital',en:'hospital',type:'noun',topic:'Places'},
+  {es:'calle',en:'street',type:'noun',topic:'Places'},
+  {es:'casa',en:'house / home',type:'noun',topic:'Places'},
+  {es:'aquí',en:'here',type:'phrase',topic:'Places'},
+  {es:'allá',en:'over there',type:'phrase',topic:'Places'},
+  {es:'cerca',en:'nearby / close',type:'phrase',topic:'Places'},
+  // Action Verbs
+  {es:'correr',en:'to run',type:'verb',topic:'Action Verbs'},
+  {es:'saltar',en:'to jump',type:'verb',topic:'Action Verbs'},
+  {es:'jugar',en:'to play',type:'verb',topic:'Action Verbs'},
+  {es:'dar',en:'to give',type:'verb',topic:'Action Verbs'},
+  {es:'recibir',en:'to receive',type:'verb',topic:'Action Verbs'},
+  {es:'caminar',en:'to walk',type:'verb',topic:'Action Verbs'},
+  {es:'hablar',en:'to talk / speak',type:'verb',topic:'Action Verbs'},
+  {es:'escuchar',en:'to listen',type:'verb',topic:'Action Verbs'},
+  {es:'compartir',en:'to share',type:'verb',topic:'Action Verbs'},
+  {es:'abrazar',en:'to hug',type:'verb',topic:'Action Verbs'},
+  {es:'trabajar',en:'to work',type:'verb',topic:'Action Verbs'},
+  {es:'vivir',en:'to live',type:'verb',topic:'Action Verbs'},
+  {es:'servir',en:'to serve',type:'verb',topic:'Action Verbs'},
+  {es:'volver',en:'to return',type:'verb',topic:'Action Verbs'},
+  {es:'ayudar',en:'to help',type:'verb',topic:'Action Verbs'},
+  // Feelings
+  {es:'feliz',en:'happy',type:'adjective',topic:'Feelings'},
+  {es:'triste',en:'sad',type:'adjective',topic:'Feelings'},
+  {es:'asustado',en:'scared',type:'adjective',topic:'Feelings'},
+  {es:'emocionado',en:'excited',type:'adjective',topic:'Feelings'},
+  {es:'cansado',en:'tired',type:'adjective',topic:'Feelings'},
+  {es:'enojado',en:'angry',type:'adjective',topic:'Feelings'},
+  {es:'bien',en:'good / fine',type:'adjective',topic:'Feelings'},
+  {es:'mal',en:'bad / not well',type:'adjective',topic:'Feelings'},
+  {es:'contento',en:'content / glad',type:'adjective',topic:'Feelings'},
+  {es:'nervioso',en:'nervous',type:'adjective',topic:'Feelings'},
+  // Clothing
+  {es:'camisa',en:'shirt',type:'noun',topic:'Clothing'},
+  {es:'pantalón',en:'pants',type:'noun',topic:'Clothing'},
+  {es:'zapatos',en:'shoes',type:'noun',topic:'Clothing'},
+  {es:'vestido',en:'dress',type:'noun',topic:'Clothing'},
+  {es:'sombrero',en:'hat',type:'noun',topic:'Clothing'},
+  {es:'calcetines',en:'socks',type:'noun',topic:'Clothing'},
+  {es:'mochila',en:'backpack',type:'noun',topic:'Clothing'},
+  {es:'ropa',en:'clothes',type:'noun',topic:'Clothing'},
+  {es:'grande',en:'big / large',type:'adjective',topic:'Clothing'},
+  {es:'pequeño',en:'small / little',type:'adjective',topic:'Clothing'},
+  // Days & Time
+  {es:'hoy',en:'today',type:'phrase',topic:'Days & Time'},
+  {es:'mañana',en:'tomorrow / morning',type:'phrase',topic:'Days & Time'},
+  {es:'ayer',en:'yesterday',type:'phrase',topic:'Days & Time'},
+  {es:'lunes',en:'Monday',type:'noun',topic:'Days & Time'},
+  {es:'viernes',en:'Friday',type:'noun',topic:'Days & Time'},
+  {es:'domingo',en:'Sunday',type:'noun',topic:'Days & Time'},
+  {es:'tarde',en:'afternoon / late',type:'noun',topic:'Days & Time'},
+  {es:'noche',en:'night',type:'noun',topic:'Days & Time'},
+  {es:'ahora',en:'now',type:'phrase',topic:'Days & Time'},
+  // Grammar: Articles
+  {es:'el',en:'the (masculine)',type:'article',topic:'Grammar: Articles'},
+  {es:'la',en:'the (feminine)',type:'article',topic:'Grammar: Articles'},
+  {es:'los',en:'the (masc. plural)',type:'article',topic:'Grammar: Articles'},
+  {es:'las',en:'the (fem. plural)',type:'article',topic:'Grammar: Articles'},
+  {es:'un',en:'a / an (masculine)',type:'article',topic:'Grammar: Articles'},
+  {es:'una',en:'a / an (feminine)',type:'article',topic:'Grammar: Articles'},
+  // Grammar: Verbs
+  {es:'ser',en:'to be (permanent)',type:'verb',topic:'Grammar: Verbs'},
+  {es:'estar',en:'to be (temporary)',type:'verb',topic:'Grammar: Verbs'},
+  {es:'tener',en:'to have',type:'verb',topic:'Grammar: Verbs'},
+  {es:'querer',en:'to want',type:'verb',topic:'Grammar: Verbs'},
+  {es:'ir',en:'to go',type:'verb',topic:'Grammar: Verbs'},
+  {es:'hacer',en:'to do / make',type:'verb',topic:'Grammar: Verbs'},
+  {es:'poder',en:'to be able to / can',type:'verb',topic:'Grammar: Verbs'},
+  {es:'saber',en:'to know',type:'verb',topic:'Grammar: Verbs'},
+  {es:'llamarse',en:'to be called (name)',type:'verb',topic:'Grammar: Verbs'},
+  {es:'sentirse',en:'to feel',type:'verb',topic:'Grammar: Verbs'},
+  // Grammar: Question Words
+  {es:'¿Qué?',en:'What?',type:'question',topic:'Question Words'},
+  {es:'¿Quién?',en:'Who?',type:'question',topic:'Question Words'},
+  {es:'¿Dónde?',en:'Where?',type:'question',topic:'Question Words'},
+  {es:'¿Cuándo?',en:'When?',type:'question',topic:'Question Words'},
+  {es:'¿Cómo?',en:'How?',type:'question',topic:'Question Words'},
+  {es:'¿Cuánto?',en:'How much?',type:'question',topic:'Question Words'},
+  {es:'¿Cuántos?',en:'How many?',type:'question',topic:'Question Words'},
+  {es:'¿Por qué?',en:'Why?',type:'question',topic:'Question Words'},
+  // Grammar: Connectors
+  {es:'y',en:'and',type:'connector',topic:'Connectors'},
+  {es:'o',en:'or',type:'connector',topic:'Connectors'},
+  {es:'pero',en:'but',type:'connector',topic:'Connectors'},
+  {es:'porque',en:'because',type:'connector',topic:'Connectors'},
+  {es:'aunque',en:'although / even though',type:'connector',topic:'Connectors'},
+  {es:'sin embargo',en:'however / nevertheless',type:'connector',topic:'Connectors'},
+  {es:'también',en:'also / too',type:'connector',topic:'Connectors'},
+  {es:'entonces',en:'then / so',type:'connector',topic:'Connectors'},
+  {es:'por eso',en:"that's why / therefore",type:'connector',topic:'Connectors'},
+  // Grammar: Prepositions
+  {es:'en',en:'in / on / at',type:'preposition',topic:'Prepositions'},
+  {es:'a',en:'to / at',type:'preposition',topic:'Prepositions'},
+  {es:'de',en:'of / from',type:'preposition',topic:'Prepositions'},
+  {es:'con',en:'with',type:'preposition',topic:'Prepositions'},
+  {es:'sin',en:'without',type:'preposition',topic:'Prepositions'},
+  {es:'para',en:'for / in order to',type:'preposition',topic:'Prepositions'},
+  {es:'por',en:'for / by / through',type:'preposition',topic:'Prepositions'},
+  {es:'entre',en:'between',type:'preposition',topic:'Prepositions'},
+  {es:'cerca de',en:'near / close to',type:'preposition',topic:'Prepositions'},
+  {es:'lejos de',en:'far from',type:'preposition',topic:'Prepositions'},
+  // Conversation: Mission Trip
+  {es:'¡Bienvenidos!',en:'Welcome!',type:'phrase',topic:'Mission Trip'},
+  {es:'Somos voluntarios.',en:'We are volunteers.',type:'phrase',topic:'Mission Trip'},
+  {es:'Venimos a servir.',en:'We come to serve.',type:'phrase',topic:'Mission Trip'},
+  {es:'¡Qué gusto conocerte!',en:'So nice to meet you!',type:'phrase',topic:'Mission Trip'},
+  {es:'¿Cómo puedo ayudar?',en:'How can I help?',type:'phrase',topic:'Mission Trip'},
+  {es:'No hablo mucho español.',en:"I don't speak much Spanish.",type:'phrase',topic:'Mission Trip'},
+  {es:'Pero quiero aprender.',en:'But I want to learn.',type:'phrase',topic:'Mission Trip'},
+  {es:'Estamos aquí para servir.',en:'We are here to serve.',type:'phrase',topic:'Mission Trip'},
+  {es:'Dios les bendiga.',en:'God bless you all.',type:'phrase',topic:'Mission Trip'},
+  {es:'Ha sido un honor.',en:'It has been an honor.',type:'phrase',topic:'Mission Trip'},
+  {es:'Los llevaré en mi corazón.',en:'I will carry you in my heart.',type:'phrase',topic:'Mission Trip'},
+  {es:'¡Hasta la próxima!',en:'Until next time!',type:'phrase',topic:'Mission Trip'},
+  // Navigation
+  {es:'¿Dónde queda el mercado?',en:'Where is the market?',type:'phrase',topic:'Navigation'},
+  {es:'Está a dos cuadras.',en:"It's two blocks away.",type:'phrase',topic:'Navigation'},
+  {es:'Doble a la derecha.',en:'Turn right.',type:'phrase',topic:'Navigation'},
+  {es:'Doble a la izquierda.',en:'Turn left.',type:'phrase',topic:'Navigation'},
+  {es:'Siga derecho.',en:'Go straight.',type:'phrase',topic:'Navigation'},
+  {es:'Me perdí.',en:'I got lost.',type:'phrase',topic:'Navigation'},
+  {es:'¿Hay un hospital cerca?',en:'Is there a hospital nearby?',type:'phrase',topic:'Navigation'},
+];
+
+// Dictionary state
+const DS = { view:'az', search:'', group:null };
+
+const TYPE_COLORS = {
+  noun:'#2563eb', verb:'#16a34a', adjective:'#ea580c', phrase:'#7c3aed',
+  number:'#0f766e', greeting:'#dc2626', question:'#d97706', connector:'#0891b2',
+  preposition:'#db2777', article:'#64748b',
+};
+const TYPE_LABELS = {
+  noun:'Noun', verb:'Verb', adjective:'Adj', phrase:'Phrase',
+  number:'Number', greeting:'Greeting', question:'Question', connector:'Connector',
+  preposition:'Prep', article:'Article',
+};
+
+
+
 // Assign levels to groups
 GROUPS.forEach(g => {
   g.levels = LEVELS.filter(l => l.group === g.id).map(l => l.id);
@@ -1181,10 +1491,10 @@ function makeQuestions(level) {
     const isForward=Math.random()<0.5;
     if(isForward){
       const choices=shuffle([item.en,...others.slice(0,3).map(o=>o.en)]);
-      qs.push({prompt:item.es,label:'What does this mean in English?',correct:item.en,choices});
+      qs.push({prompt:item.es,label:'What does this mean in English?',correct:item.en,choices,translation:`"${item.es}" = ${item.en}`});
     } else {
       const choices=shuffle([item.es,...others.slice(0,3).map(o=>o.es)]);
-      qs.push({prompt:item.en,label:'How do you say this in Spanish?',correct:item.es,choices});
+      qs.push({prompt:item.en,label:'How do you say this in Spanish?',correct:item.es,choices,translation:`"${item.en}" in Spanish is "${item.es}"`});
     }
   }
   return shuffle(qs);
@@ -1252,6 +1562,7 @@ function showHome() {
         ${ap?`<button class="btn btn-primary btn-full mt-3 btn-lg" onclick="showMap()">🗺️ ${enc(ap.name)}'s Levels →</button>`
             :`<p class="text-gray text-sm text-center mt-2">Tap a name to select, or add a new player.</p>`}
         <button class="btn btn-ghost btn-full btn-sm mt-3" onclick="showSaveCode()">💾 Save / Load Progress</button>
+        <button class="btn btn-ghost btn-full btn-sm mt-2" onclick="showDict()">📖 Dictionary &amp; Reference</button>
       </div>
       ${buildLb()}
       <div class="card" style="background:linear-gradient(135deg,#16a34a,#0f766e);color:white;border:none;">
@@ -1412,7 +1723,7 @@ function showQ() {
     </div>
     <div class="text-xs text-gray text-center mb-1">Question ${G.qIdx+1} of ${total}</div>
     ${qCard}
-    <div class="ans-grid" id="ansGrid" data-correct="${enc(q.correct)}" style="grid-template-columns:${onecol?'1fr':'1fr 1fr'}">
+    <div class="ans-grid" id="ansGrid" data-correct="${enc(q.correct)}" data-explain="${enc(q.explain||'')}" data-translation="${enc(q.translation||'')}" style="grid-template-columns:${onecol?'1fr':'1fr 1fr'}">
       ${q.choices.map(c=>`<button class="ans-btn ${onecol?'tall':''}" data-val="${enc(c)}" onclick="checkAns(this)">${enc(c)}</button>`).join('')}
     </div>
     <div id="fb" style="min-height:58px;margin-top:10px;"></div>
@@ -1421,19 +1732,29 @@ function showQ() {
 function checkAns(btn) {
   if(G.answerLocked)return;G.answerLocked=true;
   const chosen=btn.getAttribute('data-val');
-  const correct=document.getElementById('ansGrid').getAttribute('data-correct');
+  const grid=document.getElementById('ansGrid');
+  const correct=grid.getAttribute('data-correct');
+  const explain=grid.getAttribute('data-explain')||'';
+  const translation=grid.getAttribute('data-translation')||'';
   const isOk=chosen===correct;
   document.querySelectorAll('.ans-btn').forEach(b=>b.disabled=true);
   if(isOk){
     btn.classList.add('correct');G.score+=10;G.answers.push(true);beep('ok');
     const p=['¡Excelente! 🎉','¡Muy bien! ✅','¡Perfecto! 🌟','¡Correcto! 🔥','¡Sí! 👏','¡Increíble! 💪','¡Así se hace! 🙌'];
-    document.getElementById('fb').innerHTML=`<div class="feedback-box ok">${p[Math.floor(Math.random()*p.length)]}</div>`;
+    let extra='';
+    if(translation) extra=`<div class="explain-box"><span class="explain-correct">📖 ${enc(translation)}</span></div>`;
+    else if(explain) extra=`<div class="explain-box"><span class="explain-why">💡 ${enc(explain)}</span></div>`;
+    document.getElementById('fb').innerHTML=`<div class="feedback-box ok">${p[Math.floor(Math.random()*p.length)]}</div>${extra}`;
   } else {
     btn.classList.add('wrong');btn.classList.add('shake-it');G.hearts--;G.answers.push(false);beep('bad');
     document.querySelectorAll('.ans-btn').forEach(b=>{if(b.getAttribute('data-val')===correct)b.classList.add('correct');});
-    document.getElementById('fb').innerHTML=`<div class="feedback-box bad">Correct: <strong>${enc(correct)}</strong></div>`;
+    let extra='';
+    if(explain) extra=`<div class="explain-box"><span class="explain-correct">✅ <strong>${enc(correct)}</strong></span><br><span class="explain-why">💡 ${enc(explain)}</span></div>`;
+    else if(translation) extra=`<div class="explain-box"><span class="explain-correct">✅ <strong>${enc(correct)}</strong></span><br><span class="explain-why">📖 ${enc(translation)}</span></div>`;
+    else extra=`<div class="explain-box"><span class="explain-correct">✅ Correct answer: <strong>${enc(correct)}</strong></span></div>`;
+    document.getElementById('fb').innerHTML=`<div class="feedback-box bad">Not quite!</div>${extra}`;
   }
-  setTimeout(()=>{G.qIdx++;if(G.qIdx>=G.questions.length||G.hearts<=0)showComplete();else showQ();},isOk?1100:1700);
+  setTimeout(()=>{G.qIdx++;if(G.qIdx>=G.questions.length||G.hearts<=0)showComplete();else showQ();},isOk?1400:2200);
 }
 function quitConfirm(){if(confirm("Quit this level? Progress won't be saved."))showMap();}
 
@@ -1624,6 +1945,88 @@ function confirmDeletePlayer(id){
   if(G.activePlayer&&G.activePlayer.id===id)G.activePlayer=null;
   save();showHome();
 }
+
+
+// ============================================================
+// DICTIONARY SCREEN
+// ============================================================
+function showDict() {
+  DS.view='az'; DS.search=''; DS.group=null;
+  renderDict();
+}
+
+function renderDict() {
+  const views=[
+    {id:'az',label:'A–Z'},
+    {id:'grammar',label:'Grammar Type'},
+    {id:'topic',label:'By Topic'},
+  ];
+  const tabsHtml=views.map(v=>`<div class="dict-tab ${DS.view===v.id?'active':''}" onclick="setDictView('${v.id}')">${v.label}</div>`).join('');
+
+  let listHtml='';
+  const q=(DS.search||'').toLowerCase().trim();
+  const filtered=DICT_ENTRIES.filter(e=>!q||(e.es.toLowerCase().includes(q)||e.en.toLowerCase().includes(q)||e.type.includes(q)||e.topic.toLowerCase().includes(q)));
+
+  if(DS.view==='az'){
+    const sorted=[...filtered].sort((a,b)=>a.es.localeCompare(b.es,'es'));
+    let lastLetter='';
+    sorted.forEach(e=>{
+      const letter=e.es[0].toUpperCase();
+      if(letter!==lastLetter){listHtml+=`<div class="dict-section">${letter}</div>`;lastLetter=letter;}
+      listHtml+=dictEntry(e);
+    });
+  } else if(DS.view==='grammar'){
+    const typeOrder=['noun','verb','adjective','article','phrase','greeting','number','question','connector','preposition'];
+    const byType={};
+    filtered.forEach(e=>{if(!byType[e.type])byType[e.type]=[];byType[e.type].push(e);});
+    typeOrder.forEach(t=>{
+      if(!byType[t])return;
+      const label=TYPE_LABELS[t]||t;
+      const color=TYPE_COLORS[t]||'#64748b';
+      listHtml+=`<div class="dict-section" style="color:${color}">${label}s (${byType[t].length})</div>`;
+      byType[t].sort((a,b)=>a.es.localeCompare(b.es,'es')).forEach(e=>{listHtml+=dictEntry(e);});
+    });
+  } else {
+    const topicOrder=['Greetings','Introductions','Family','Numbers','Days & Time','Colors','Feelings','Body','Animals','Weather','Places','Clothing','Food & Water','Faith & Church','Haircut Station','Bike Repair','Action Verbs','Mission Trip','Navigation','Grammar: Articles','Grammar: Verbs','Question Words','Connectors','Prepositions'];
+    const byTopic={};
+    filtered.forEach(e=>{if(!byTopic[e.topic])byTopic[e.topic]=[];byTopic[e.topic].push(e);});
+    const topicsSorted=[...topicOrder.filter(t=>byTopic[t]),...Object.keys(byTopic).filter(t=>!topicOrder.includes(t))];
+    topicsSorted.forEach(t=>{
+      listHtml+=`<div class="dict-section">📌 ${t} (${byTopic[t].length})</div>`;
+      byTopic[t].forEach(e=>{listHtml+=dictEntry(e);});
+    });
+  }
+
+  if(!listHtml) listHtml=`<div class="text-center text-gray" style="padding:24px;">No words found for "<strong>${enc(q)}</strong>"</div>`;
+
+  go(`<div>
+    <div class="flex items-center gap-2" style="padding:14px 0;">
+      <button class="back-btn" onclick="showHome()">←</button>
+      <h2>📖 Dictionary</h2>
+      <div class="text-xs text-gray" style="margin-left:auto;">${DICT_ENTRIES.length} words</div>
+    </div>
+    <input class="dict-search" placeholder="🔍 Search Spanish or English..." value="${enc(DS.search)}" oninput="DS.search=this.value;renderDict()" id="dictSearch">
+    <div class="dict-tabs">${tabsHtml}</div>
+    <div id="dictList">${listHtml}</div>
+  </div>`);
+  // Re-focus search box after render
+  const s=document.getElementById('dictSearch');
+  if(s&&DS.search){s.focus();s.setSelectionRange(s.value.length,s.value.length);}
+}
+
+function dictEntry(e){
+  const color=TYPE_COLORS[e.type]||'#64748b';
+  const label=TYPE_LABELS[e.type]||e.type;
+  return `<div class="dict-entry">
+    <div style="flex:1">
+      <div class="dict-es">${enc(e.es)}</div>
+      <div class="dict-en">${enc(e.en)}</div>
+    </div>
+    <div class="dict-tag" style="background:${color}22;color:${color}">${label}</div>
+  </div>`;
+}
+
+function setDictView(v){DS.view=v;renderDict();}
 
 // ============================================================
 // INIT
