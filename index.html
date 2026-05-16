@@ -174,9 +174,38 @@ h3 { font-size: 1rem; font-weight: 700; }
 .explain-box { background:#fffbeb; border:2px solid #fbbf24; border-radius:10px; padding:10px 13px; font-size:0.85rem; margin-top:8px; animation:fadeUp 0.25s ease; }
 .explain-box .explain-why { color:#92400e; font-weight:600; }
 .explain-box .explain-correct { color:#15803d; font-weight:700; }
+
+/* ── PRINT STYLES ── */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { background: white !important; font-family: Georgia, serif; font-size: 11pt; color: #000; }
+  #app, #confetti { display: none !important; }
+  #print-sheet { display: block !important; }
+
+  .print-header { text-align: center; border-bottom: 3px solid #ce1126; padding-bottom: 10px; margin-bottom: 16px; }
+  .print-title { font-size: 22pt; font-weight: 900; color: #ce1126; letter-spacing: 1px; }
+  .print-subtitle { font-size: 10pt; color: #555; margin-top: 3px; }
+  .print-flag { display: flex; height: 5px; margin: 6px auto; width: 200px; }
+  .print-flag div { flex: 1; }
+
+  .print-section-title { font-size: 10pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: #555; border-bottom: 1px solid #ddd; padding: 4px 0 2px; margin: 12px 0 6px; page-break-after: avoid; }
+
+  .print-cols { column-count: 2; column-gap: 24px; }
+  .print-entry { display: flex; align-items: baseline; gap: 6px; padding: 3px 0; border-bottom: 1px dotted #e0e0e0; page-break-inside: avoid; break-inside: avoid; }
+  .print-es { font-weight: 700; font-size: 10.5pt; min-width: 130px; }
+  .print-en { font-size: 9.5pt; color: #333; }
+  .print-type { font-size: 7.5pt; color: #888; border: 1px solid #ccc; border-radius: 3px; padding: 1px 4px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+  .print-footer { text-align: center; font-size: 8pt; color: #888; border-top: 1px solid #ddd; padding-top: 8px; margin-top: 16px; }
+  @page { margin: 0.65in 0.6in; }
+}
+@media screen { #print-sheet { display: none !important; } }
 </style>
 </head>
 <body>
+<div id="print-sheet">
+  <!-- Populated by JS when user clicks Print -->
+</div>
 <div id="app"></div>
 <div id="confetti"></div>
 <script>
@@ -1840,10 +1869,15 @@ function showMap() {
   const tabsHtml=GROUPS.map(g=>{
     const unlocked=isGroupUnlocked(ap.id,g.id);
     const active=G.activeGroup===g.id;
+    const done=completedInGroup(ap.id,g.id);
+    const total=g.levels.length;
+    const pct=total?Math.round(done/total*100):0;
+    const progressBar=unlocked?`<div style="height:3px;background:${active?'rgba(255,255,255,0.4)':g.color+'33'};border-radius:100px;margin-top:4px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${active?'white':g.color};border-radius:100px;"></div></div><div style="font-size:0.6rem;margin-top:1px;opacity:${active?'0.85':'0.7'}">${done}/${total}</div>`:'';
     return `<div class="group-tab ${active?'active':''} ${!unlocked?'locked-tab':''}"
       style="${active?`background:${g.color};`:''}color:${active?'white':unlocked?g.color:'#94a3b8'};border-color:${active?g.color:unlocked?g.color+'44':'#e2e8f0'};"
       onclick="${unlocked?`setGroup('${g.id}')`:''}">
       ${g.label}${!unlocked?' 🔒':''}
+      ${progressBar}
     </div>`;
   }).join('');
   const gDef=GROUPS.find(g=>g.id===G.activeGroup);
@@ -1912,7 +1946,7 @@ function startIntro(id) {
   let vocabHtml='';
   if(lv.vocab){
     vocabHtml=`<div class="card"><h3 class="mb-2">📚 Vocabulary Preview</h3>
-      <div class="vocab-grid">${lv.vocab.slice(0,8).map(v=>`<div class="vocab-item"><div class="vocab-es">${enc(v.es)}</div><div class="vocab-en">${enc(v.en)}</div></div>`).join('')}</div>
+      <div class="vocab-grid">${lv.vocab.slice(0,8).map(v=>`<div class="vocab-item"><div class="vocab-es">${enc(v.es)} ${speakBtn(v.es)}</div><div class="vocab-en">${enc(v.en)}</div></div>`).join('')}</div>
     </div>`;
   }
   go(`<div class="bounce-in">
@@ -1956,7 +1990,11 @@ function showQ() {
     const html=enc(q.prompt).replace(/___/g,'<span class="blank-slot">___</span>');
     qCard=`<div class="q-card bounce-in"><div class="q-label">${enc(q.label)}</div><div class="fill-sentence">${html}</div></div>`;
   } else {
-    qCard=`<div class="q-card bounce-in"><div class="q-label">${enc(q.label)}</div><div class="q-text">${enc(q.prompt)}</div></div>`;
+    // For vocab questions the prompt is Spanish — add speak button
+    const isSpanish = q.label && q.label.includes('English');
+    const speakTarget = isSpanish ? q.prompt : '';
+    qCard=`<div class="q-card bounce-in"><div class="q-label">${enc(q.label)}</div><div class="q-text">${enc(q.prompt)}${speakTarget?` ${speakBtn(speakTarget)}`:''}`;
+    qCard+=`</div></div>`;
   }
   go(`<div>
     <div class="flex items-center gap-3" style="padding:12px 0;">
@@ -1985,16 +2023,22 @@ function checkAns(btn) {
     btn.classList.add('correct');G.score+=10;G.answers.push(true);beep('ok');
     const p=['¡Excelente! 🎉','¡Muy bien! ✅','¡Perfecto! 🌟','¡Correcto! 🔥','¡Sí! 👏','¡Increíble! 💪','¡Así se hace! 🙌'];
     let extra='';
-    if(translation) extra=`<div class="explain-box"><span class="explain-correct">📖 ${enc(translation)}</span></div>`;
+    // Auto-speak the correct Spanish answer
+    const correctSpanish = G.questions[G.qIdx] && G.questions[G.qIdx].prompt && !G.questions[G.qIdx].type ? correct : (grid.getAttribute('data-es')||'');
+    if(correctSpanish) setTimeout(()=>speak(correctSpanish), 300);
+    else setTimeout(()=>speak(correct, 0.8), 300);
+    if(translation) extra=`<div class="explain-box"><span class="explain-correct">📖 ${enc(translation)}</span> ${speakBtn(correct)}</div>`;
     else if(explain) extra=`<div class="explain-box"><span class="explain-why">💡 ${enc(explain)}</span></div>`;
     document.getElementById('fb').innerHTML=`<div class="feedback-box ok">${p[Math.floor(Math.random()*p.length)]}</div>${extra}`;
   } else {
     btn.classList.add('wrong');btn.classList.add('shake-it');G.hearts--;G.answers.push(false);beep('bad');
     document.querySelectorAll('.ans-btn').forEach(b=>{if(b.getAttribute('data-val')===correct)b.classList.add('correct');});
     let extra='';
-    if(explain) extra=`<div class="explain-box"><span class="explain-correct">✅ <strong>${enc(correct)}</strong></span><br><span class="explain-why">💡 ${enc(explain)}</span></div>`;
-    else if(translation) extra=`<div class="explain-box"><span class="explain-correct">✅ <strong>${enc(correct)}</strong></span><br><span class="explain-why">📖 ${enc(translation)}</span></div>`;
-    else extra=`<div class="explain-box"><span class="explain-correct">✅ Correct answer: <strong>${enc(correct)}</strong></span></div>`;
+    // Speak the correct answer after a short delay
+    setTimeout(()=>speak(correct, 0.8), 600);
+    if(explain) extra=`<div class="explain-box"><span class="explain-correct">✅ <strong>${enc(correct)}</strong></span> ${speakBtn(correct)}<br><span class="explain-why">💡 ${enc(explain)}</span></div>`;
+    else if(translation) extra=`<div class="explain-box"><span class="explain-correct">✅ <strong>${enc(correct)}</strong></span> ${speakBtn(correct)}<br><span class="explain-why">📖 ${enc(translation)}</span></div>`;
+    else extra=`<div class="explain-box"><span class="explain-correct">✅ Correct answer: <strong>${enc(correct)}</strong></span> ${speakBtn(correct)}</div>`;
     document.getElementById('fb').innerHTML=`<div class="feedback-box bad">Not quite!</div>${extra}`;
   }
   setTimeout(()=>{G.qIdx++;if(G.qIdx>=G.questions.length||G.hearts<=0)showComplete();else showQ();},isOk?1400:2200);
@@ -2246,7 +2290,10 @@ function renderDict() {
     <div class="flex items-center gap-2" style="padding:14px 0;">
       <button class="back-btn" onclick="showHome()">←</button>
       <h2>📖 Dictionary</h2>
-      <div class="text-xs text-gray" style="margin-left:auto;">${DICT_ENTRIES.length} words</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+        <div class="text-xs text-gray">${DICT_ENTRIES.length} words</div>
+        <button class="btn btn-outline btn-sm" onclick="printDict()">🖨️ Print</button>
+      </div>
     </div>
     <input class="dict-search" placeholder="🔍 Search Spanish or English..." value="${enc(DS.search)}" oninput="DS.search=this.value;renderDict()" id="dictSearch">
     <div class="dict-tabs">${tabsHtml}</div>
@@ -2262,7 +2309,7 @@ function dictEntry(e){
   const label=TYPE_LABELS[e.type]||e.type;
   return `<div class="dict-entry">
     <div style="flex:1">
-      <div class="dict-es">${enc(e.es)}</div>
+      <div class="dict-es">${enc(e.es)} ${speakBtn(e.es)}</div>
       <div class="dict-en">${enc(e.en)}</div>
     </div>
     <div class="dict-tag" style="background:${color}22;color:${color}">${label}</div>
@@ -2270,6 +2317,83 @@ function dictEntry(e){
 }
 
 function setDictView(v){DS.view=v;renderDict();}
+
+
+// ============================================================
+// AUDIO PRONUNCIATION
+// ============================================================
+function speak(text, rate=0.85) {
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-MX';
+  u.rate = rate;
+  u.pitch = 1;
+  // Try to pick a Spanish voice
+  const voices = window.speechSynthesis.getVoices();
+  const es = voices.find(v=>v.lang.startsWith('es-MX')) ||
+             voices.find(v=>v.lang.startsWith('es')) ||
+             null;
+  if(es) u.voice = es;
+  window.speechSynthesis.speak(u);
+}
+function speakBtn(text) {
+  return `<button onclick="event.stopPropagation();speak('${text.replace(/'/g,"\'")}')" 
+    style="background:none;border:none;cursor:pointer;font-size:1.1rem;padding:2px 5px;opacity:.65;transition:opacity .15s;vertical-align:middle;"
+    onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.65"
+    title="Hear pronunciation">🔊</button>`;
+}
+
+
+// ============================================================
+// PRINT
+// ============================================================
+function printDict() {
+  // Group entries by topic for printing
+  const topicOrder = [
+    'Greetings','Introductions','Family','Numbers','Days & Time','Colors','Feelings',
+    'Body','Animals','Weather','Places','Clothing','Food & Water','Faith & Church',
+    'Haircut Station','Bike Repair','Action Verbs','Mission Trip','Navigation',
+    'Grammar: Articles','Grammar: Verbs','Question Words','Connectors','Prepositions'
+  ];
+  const byTopic = {};
+  DICT_ENTRIES.forEach(e => {
+    if(!byTopic[e.topic]) byTopic[e.topic] = [];
+    byTopic[e.topic].push(e);
+  });
+  const topics = [...topicOrder.filter(t=>byTopic[t]), ...Object.keys(byTopic).filter(t=>!topicOrder.includes(t))];
+
+  let html = `
+    <div class="print-header">
+      <div class="print-flag"><div style="background:#006847"></div><div style="background:#fff;border:1px solid #eee"></div><div style="background:#ce1126"></div></div>
+      <div class="print-title">¡Vamos a México!</div>
+      <div class="print-subtitle">Mission Trip Spanish Dictionary &nbsp;·&nbsp; Calvary Chapel Queen Creek &nbsp;·&nbsp; ${new Date().getFullYear()}</div>
+      <div class="print-flag"><div style="background:#006847"></div><div style="background:#fff;border:1px solid #eee"></div><div style="background:#ce1126"></div></div>
+    </div>
+    <div class="print-cols">
+  `;
+
+  topics.forEach(topic => {
+    const entries = byTopic[topic];
+    html += `<div class="print-section-title">${topic}</div>`;
+    entries.forEach(e => {
+      const typeLabel = TYPE_LABELS[e.type] || e.type;
+      html += `<div class="print-entry">
+        <span class="print-es">${enc(e.es)}</span>
+        <span class="print-en">${enc(e.en)}</span>
+        <span class="print-type">${typeLabel}</span>
+      </div>`;
+    });
+  });
+
+  html += `</div>
+    <div class="print-footer">
+      ¡Dios les bendiga! &nbsp;·&nbsp; ${DICT_ENTRIES.length} words &nbsp;·&nbsp; vamos-a-mexico game
+    </div>`;
+
+  document.getElementById('print-sheet').innerHTML = html;
+  setTimeout(() => { window.print(); }, 150);
+}
 
 // ============================================================
 // INIT
